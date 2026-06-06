@@ -181,6 +181,49 @@ app.post('/api/suggestions/:id/vote', async (req, res) => {
   res.json(suggestions[index]);
 });
 
+app.get('/api/repo-stats', async (req, res) => {
+  try {
+    const repoRes = await fetch('https://api.github.com/repos/Manvikamboz/Startora', {
+      headers: { 'User-Agent': 'Startora-App' }
+    });
+    const contribsRes = await fetch('https://api.github.com/repos/Manvikamboz/Startora/contributors', {
+      headers: { 'User-Agent': 'Startora-App' }
+    });
+    
+    let stargazers = 0;
+    let forks = 0;
+    let contributorsList = [];
+
+    if (repoRes.ok) {
+      const repoData = await repoRes.json();
+      stargazers = repoData.stargazers_count;
+      forks = repoData.forks_count;
+    }
+    if (contribsRes.ok) {
+      contributorsList = await contribsRes.json();
+    }
+
+    res.json({
+      stargazers,
+      forks,
+      contributorsCount: Array.isArray(contributorsList) ? Math.max(1, contributorsList.length) : 1,
+      contributors: Array.isArray(contributorsList) ? contributorsList.map(c => ({
+        login: c.login,
+        avatar_url: c.avatar_url,
+        contributions: c.contributions
+      })) : []
+    });
+  } catch (err) {
+    console.error('Error fetching repo stats:', err);
+    res.json({
+      stargazers: 0,
+      forks: 0,
+      contributorsCount: 1,
+      contributors: []
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Backend server running on http://localhost:${PORT}`);
 });

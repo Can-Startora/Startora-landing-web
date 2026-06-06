@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Users, ShieldAlert } from 'lucide-react';
+import { Users, GitFork, Star } from 'lucide-react';
 
 const GithubIcon = (props) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -8,8 +8,8 @@ const GithubIcon = (props) => (
   </svg>
 );
 
-const CONTRIBUTORS = [
-  { id: 1, name: "Manvi Kamboz", role: "Lead Architect", handle: "Manvikamboz", university: "Founder & Lead", avatar: "/founder.jpeg", xPercent: 50, yPercent: 45, radius: 14, color: "#06b6d4" },
+const INITIAL_CONTRIBUTORS = [
+  { id: 1, name: "Manvi Kamboz", role: "Lead Architect", handle: "Manvikamboz", university: "Founder & Lead", avatar: "https://avatars.githubusercontent.com/u/178479748?v=4", xPercent: 50, yPercent: 45, radius: 14, color: "#06b6d4" },
   { id: 2, name: "Alex Chen", role: "AI Services Dev", handle: "alex-chen-mit", university: "MIT", avatar: "https://randomuser.me/api/portraits/men/32.jpg", xPercent: 28, yPercent: 25, radius: 10, color: "#8b5cf6" },
   { id: 3, name: "Yuki Tanaka", role: "Web3 Dev", handle: "yuki-tanaka-todai", university: "Tokyo U", avatar: "https://randomuser.me/api/portraits/women/44.jpg", xPercent: 20, yPercent: 65, radius: 10, color: "#8b5cf6" },
   { id: 4, name: "Sarah Jenkins", role: "UI/UX Design", handle: "sarahj-stanford", university: "Stanford", avatar: "https://randomuser.me/api/portraits/women/12.jpg", xPercent: 72, yPercent: 30, radius: 10, color: "#ec4899" },
@@ -22,7 +22,7 @@ export default function ContributorConstellation() {
   const canvasRef = useRef(null);
   const [hoveredNode, setHoveredNode] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-  const [stats, setStats] = useState({ stargazers: 142, forks: 28, contributors: 14 });
+  const [stats, setStats] = useState({ stargazers: 0, forks: 0, contributors: 1 });
 
   const hoveredNodeRef = useRef(null);
   const nodesRef = useRef([]);
@@ -39,7 +39,7 @@ export default function ContributorConstellation() {
       canvas.height = rect.height;
 
       // Initialize or scale node coordinates relative to width/height
-      nodesRef.current = CONTRIBUTORS.map((c) => ({
+      nodesRef.current = INITIAL_CONTRIBUTORS.map((c) => ({
         ...c,
         x: (c.xPercent / 100) * canvas.width,
         y: (c.yPercent / 100) * canvas.height,
@@ -52,6 +52,50 @@ export default function ContributorConstellation() {
 
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
+
+    // Fetch live statistics from Express backend
+    const fetchRepoStats = async () => {
+      try {
+        const res = await fetch('/api/repo-stats');
+        if (res.ok) {
+          const data = await res.json();
+          setStats({
+            stargazers: data.stargazers,
+            forks: data.forks,
+            contributors: data.contributorsCount
+          });
+
+          // Merge live contributors into the nodes array dynamically
+          if (data.contributors && data.contributors.length > 0) {
+            nodesRef.current = nodesRef.current.map((node, index) => {
+              if (index < data.contributors.length) {
+                const gitUser = data.contributors[index];
+                if (index === 0) {
+                  return {
+                    ...node,
+                    avatar: gitUser.avatar_url || node.avatar,
+                    handle: gitUser.login || node.handle,
+                  };
+                }
+                return {
+                  ...node,
+                  name: gitUser.login,
+                  handle: gitUser.login,
+                  avatar: gitUser.avatar_url,
+                  role: `Contributor (${gitUser.contributions} commits)`,
+                  university: 'GitHub Builder'
+                };
+              }
+              return node;
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching repo stats in UI:', err);
+      }
+    };
+
+    fetchRepoStats();
 
     // Mouse movement
     let mouse = { x: null, y: null };
@@ -138,21 +182,17 @@ export default function ContributorConstellation() {
 
       // 3. Update & Draw Nodes
       nodes.forEach((node) => {
-        // Slow organic floating physics
         node.x += node.vx;
         node.y += node.vy;
 
-        // Bounce back inside boundaries
         const padding = 50;
         if (node.x < padding || node.x > canvas.width - padding) node.vx *= -1;
         if (node.y < padding || node.y > canvas.height - padding) node.vy *= -1;
 
-        // Target hover radius scaling
         const isHovered = hoveredNodeRef.current && hoveredNodeRef.current.id === node.id;
         node.targetRadius = isHovered ? node.radius * 1.3 : node.radius;
         node.currentRadius += (node.targetRadius - node.currentRadius) * 0.15;
 
-        // Glow ring
         ctx.shadowBlur = isHovered ? 20 : 8;
         ctx.shadowColor = node.color;
         ctx.fillStyle = isHovered ? '#fff' : node.color;
@@ -160,14 +200,12 @@ export default function ContributorConstellation() {
         ctx.arc(node.x, node.y, node.currentRadius, 0, Math.PI * 2);
         ctx.fill();
 
-        // Inner core
         ctx.shadowBlur = 0;
         ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.currentRadius * 0.4, 0, Math.PI * 2);
         ctx.fill();
 
-        // Label below node
         ctx.fillStyle = isHovered ? '#fff' : 'rgba(255, 255, 255, 0.55)';
         ctx.font = isHovered ? 'bold 11px var(--font-display)' : '10px var(--font-body)';
         ctx.textAlign = 'center';
@@ -197,9 +235,15 @@ export default function ContributorConstellation() {
       {/* GitHub Repo stats overlay */}
       <div className="repo-stats-header" style={{ position: 'absolute', top: '24px', left: '24px', display: 'flex', gap: '16px', zIndex: 10 }}>
         <div className="repo-stat-pill" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '12px', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '8px', backdropFilter: 'blur(8px)' }}>
-          <GithubIcon className="w-4 h-4 text-cyan-400" />
+          <Star className="w-4 h-4 text-yellow-400" />
           <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.7)' }}>
             Stars: <strong style={{ color: '#fff' }}>{stats.stargazers}</strong>
+          </span>
+        </div>
+        <div className="repo-stat-pill" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '12px', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '8px', backdropFilter: 'blur(8px)' }}>
+          <GitFork className="w-4 h-4 text-cyan-400" />
+          <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.7)' }}>
+            Forks: <strong style={{ color: '#fff' }}>{stats.forks}</strong>
           </span>
         </div>
         <div className="repo-stat-pill" style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '12px', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '8px', backdropFilter: 'blur(8px)' }}>
