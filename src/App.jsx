@@ -274,7 +274,7 @@ export default function App() {
 
     {
       label: 'Open Source',
-      icon: <GithubIcon className="w-5 h-5" />,
+      icon: <GithubIcon style={{ width: '20px', height: '20px', display: 'block' }} />,
       onClick: () => document.getElementById('community')?.scrollIntoView({ behavior: 'smooth' })
     },
   ];
@@ -514,19 +514,43 @@ export default function App() {
           {communityTab === 'terminal' && <TerminalSimulator />}
           {communityTab === 'dao' && <DaoProposalSim />}
         </div>
-      </section>      {/* Footer */}
+      </section>
+
+      {/* Footer */}
       <footer className="footer">
         <div className="footer-logo">
           <Rocket className="w-5 h-5 text-cyan-400" />
-          <span>LAUNCHPAD LABS</span>
+          <span>STARTORA</span>
         </div>
         <div className="footer-links">
+          <a href="#hero" className="footer-link">Home</a>
           <a href="#features" className="footer-link">Features</a>
           <a href="#network" className="footer-link">Network</a>
-          <a href="#sandbox" className="footer-link">Sandbox</a>
           <a href="#architecture" className="footer-link">System Flow</a>
+          <a href="#community" className="footer-link">Open Source</a>
+          <a
+            href="https://github.com/Manvikamboz/Startora"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-link"
+            style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
+          >
+            <GithubIcon className="w-3.5 h-3.5" />
+            GitHub
+          </a>
         </div>
-        <p>© 2026 Startora. All right reserved.</p>
+        <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', margin: 0 }}>
+          © 2026 Startora · Built by{' '}
+          <a
+            href="https://github.com/Manvikamboz"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'var(--neon-teal)', textDecoration: 'none' }}
+          >
+            @Manvikamboz
+          </a>
+          {' '}· MIT Open Source
+        </p>
       </footer>
 
       <br />

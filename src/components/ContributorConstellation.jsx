@@ -9,12 +9,7 @@ const GithubIcon = (props) => (
 );
 
 const INITIAL_CONTRIBUTORS = [
-  { id: 1, name: "Manvi Kamboz", role: "Lead Architect", handle: "Manvikamboz", university: "Founder & Lead", avatar: "https://avatars.githubusercontent.com/u/178479748?v=4", xPercent: 50, yPercent: 45, radius: 14, color: "#06b6d4" },
-  { id: 2, name: "Alex Chen", role: "AI Services Dev", handle: "alex-chen-mit", university: "MIT", avatar: "https://randomuser.me/api/portraits/men/32.jpg", xPercent: 28, yPercent: 25, radius: 10, color: "#8b5cf6" },
-  { id: 3, name: "Yuki Tanaka", role: "Web3 Dev", handle: "yuki-tanaka-todai", university: "Tokyo U", avatar: "https://randomuser.me/api/portraits/women/44.jpg", xPercent: 20, yPercent: 65, radius: 10, color: "#8b5cf6" },
-  { id: 4, name: "Sarah Jenkins", role: "UI/UX Design", handle: "sarahj-stanford", university: "Stanford", avatar: "https://randomuser.me/api/portraits/women/12.jpg", xPercent: 72, yPercent: 30, radius: 10, color: "#ec4899" },
-  { id: 5, name: "David Kim", role: "DAO Sandbox", handle: "david-kim-snu", university: "SNU", avatar: "https://randomuser.me/api/portraits/men/85.jpg", xPercent: 40, yPercent: 80, radius: 10, color: "#06b6d4" },
-  { id: 6, name: "Emily Watson", role: "Contract Auditor", handle: "emily-sec-ox", university: "Oxford", avatar: "https://randomuser.me/api/portraits/women/65.jpg", xPercent: 80, yPercent: 70, radius: 10, color: "#eab308" }
+  { id: 1, name: "Manvi Kamboz", role: "Lead Architect", handle: "Manvikamboz", university: "Founder & Lead", avatar: "https://avatars.githubusercontent.com/u/178479748?v=4", xPercent: 50, yPercent: 45, radius: 14, color: "#06b6d4" }
 ];
 
 export default function ContributorConstellation() {
@@ -26,6 +21,7 @@ export default function ContributorConstellation() {
 
   const hoveredNodeRef = useRef(null);
   const nodesRef = useRef([]);
+  const contributorsRef = useRef(INITIAL_CONTRIBUTORS);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -38,16 +34,19 @@ export default function ContributorConstellation() {
       canvas.width = rect.width;
       canvas.height = rect.height;
 
-      // Initialize or scale node coordinates relative to width/height
-      nodesRef.current = INITIAL_CONTRIBUTORS.map((c) => ({
-        ...c,
-        x: (c.xPercent / 100) * canvas.width,
-        y: (c.yPercent / 100) * canvas.height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        targetRadius: c.radius,
-        currentRadius: c.radius
-      }));
+      // Initialize or scale node coordinates relative to width/height, preserving physics state if active
+      nodesRef.current = contributorsRef.current.map((c, index) => {
+        const existing = nodesRef.current[index];
+        return {
+          ...c,
+          x: existing ? (existing.x / canvas.width) * canvas.width : (c.xPercent / 100) * canvas.width,
+          y: existing ? (existing.y / canvas.height) * canvas.height : (c.yPercent / 100) * canvas.height,
+          vx: existing ? existing.vx : (Math.random() - 0.5) * 0.4,
+          vy: existing ? existing.vy : (Math.random() - 0.5) * 0.4,
+          targetRadius: c.radius,
+          currentRadius: existing ? existing.currentRadius : c.radius
+        };
+      });
     };
 
     resizeCanvas();
@@ -65,9 +64,9 @@ export default function ContributorConstellation() {
             contributors: data.contributorsCount
           });
 
-          // Merge live contributors into the nodes array dynamically
+          // Merge live contributors into the active list
           if (data.contributors && data.contributors.length > 0) {
-            nodesRef.current = nodesRef.current.map((node, index) => {
+            const mergedList = INITIAL_CONTRIBUTORS.map((node, index) => {
               if (index < data.contributors.length) {
                 const gitUser = data.contributors[index];
                 if (index === 0) {
@@ -84,6 +83,18 @@ export default function ContributorConstellation() {
                   avatar: gitUser.avatar_url,
                   role: `Contributor (${gitUser.contributions} commits)`,
                   university: 'GitHub Builder'
+                };
+              }
+              return node;
+            });
+            contributorsRef.current = mergedList;
+            
+            // Sync nodesRef.current with new contributors details
+            nodesRef.current = nodesRef.current.map((node, index) => {
+              if (index < mergedList.length) {
+                return {
+                  ...node,
+                  ...mergedList[index]
                 };
               }
               return node;
