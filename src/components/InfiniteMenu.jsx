@@ -599,8 +599,8 @@ class InfiniteGridMenu {
   constructor(canvas, items, onActiveItemChange, onMovementChange, onInit = null, scale = 1.0) {
     this.canvas = canvas;
     this.items = items || [];
-    this.onActiveItemChange = onActiveItemChange || (() => {});
-    this.onMovementChange = onMovementChange || (() => {});
+    this.onActiveItemChange = onActiveItemChange || (() => { });
+    this.onMovementChange = onMovementChange || (() => { });
     this.scaleFactor = scale;
     this.camera.position[2] = 3 * scale;
     this.#init(onInit);
