@@ -14,7 +14,9 @@ import {
   Play,
   Globe,
   Send,
-  Mail
+  Mail,
+  Code2,
+  Home
 } from 'lucide-react';
 
 const GithubIcon = (props) => (
@@ -252,7 +254,7 @@ export default function App() {
   const dockItems = [
     {
       label: 'Home',
-      icon: <Rocket className="w-5 h-5" />,
+      icon: <Home className="w-5 h-5" />,
       onClick: () => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })
     },
     {
@@ -274,7 +276,7 @@ export default function App() {
 
     {
       label: 'Open Source',
-      icon: <GithubIcon style={{ width: '20px', height: '20px', display: 'block' }} />,
+      icon: <Code2 className="w-5 h-5" />,
       onClick: () => document.getElementById('community')?.scrollIntoView({ behavior: 'smooth' })
     },
   ];
@@ -284,6 +286,91 @@ export default function App() {
 
   return (
     <div className="app-container">
+      {/* Fixed GitHub CTA — top right */}
+      <a
+        href="https://github.com/Manvikamboz/Startora"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Star us on GitHub"
+        style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '9px 16px',
+          borderRadius: '12px',
+          background: 'rgba(255,255,255,0.05)',
+          border: '1px solid rgba(255,255,255,0.12)',
+          backdropFilter: 'blur(12px)',
+          color: 'rgba(255,255,255,0.8)',
+          fontSize: '12px',
+          fontWeight: '600',
+          fontFamily: 'var(--font-display)',
+          textDecoration: 'none',
+          letterSpacing: '0.03em',
+          cursor: 'pointer',
+          transition: 'background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s'
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.background = 'rgba(6,182,212,0.12)';
+          e.currentTarget.style.borderColor = 'rgba(6,182,212,0.45)';
+          e.currentTarget.style.color = '#fff';
+          e.currentTarget.style.boxShadow = '0 0 18px rgba(6,182,212,0.25)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
+          e.currentTarget.style.color = 'rgba(255,255,255,0.8)';
+          e.currentTarget.style.boxShadow = 'none';
+        }}
+      >
+        <GithubIcon style={{ width: '16px', height: '16px', flexShrink: 0 }} />
+        Star on GitHub
+      </a>
+
+      {/* Fixed Logo — top left */}
+      <button
+        onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}
+        title="Back to top"
+        style={{
+          position: 'fixed',
+          top: '20px',
+          left: '20px',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '9px',
+          padding: '9px 16px',
+          borderRadius: '12px',
+          background: 'rgba(255,255,255,0.05)',
+          border: '1px solid rgba(255,255,255,0.12)',
+          backdropFilter: 'blur(12px)',
+          color: '#fff',
+          fontSize: '13px',
+          fontWeight: '800',
+          fontFamily: 'var(--font-display)',
+          letterSpacing: '0.08em',
+          cursor: 'pointer',
+          transition: 'background 0.2s, border-color 0.2s, box-shadow 0.2s'
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.background = 'rgba(6,182,212,0.10)';
+          e.currentTarget.style.borderColor = 'rgba(6,182,212,0.4)';
+          e.currentTarget.style.boxShadow = '0 0 18px rgba(6,182,212,0.2)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
+          e.currentTarget.style.boxShadow = 'none';
+        }}
+      >
+        <Rocket style={{ width: '16px', height: '16px', color: '#fff', flexShrink: 0 }} />
+        STARTORA
+      </button>
+
       {/* Glassmorphic Splash Screen Overlay */}
       {isSplashMounted && (
         <div className={`splash-overlay ${!showSplash ? 'hidden' : ''}`}>
@@ -528,20 +615,10 @@ export default function App() {
           <a href="#network" className="footer-link">Network</a>
           <a href="#architecture" className="footer-link">System Flow</a>
           <a href="#community" className="footer-link">Open Source</a>
-          <a
-            href="https://github.com/Manvikamboz/Startora"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="footer-link"
-            style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
-          >
-            <GithubIcon className="w-3.5 h-3.5" />
-            GitHub
-          </a>
         </div>
 
         {/* Social Icons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', margin: '8px 0' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', margin: '12px 0' }}>
           {/* Instagram */}
           <a
             href="https://www.instagram.com/startora.open?igsh=MWYyZTRiY3ZkZDQ3MQ=="
@@ -598,10 +675,6 @@ export default function App() {
           </a>
         </p>
       </footer>
-
-      <br />
-      <br />
-      <br />
 
       <Dock items={dockItems} />
     </div>
