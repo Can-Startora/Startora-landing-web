@@ -436,7 +436,7 @@ export default function App() {
 
       <section id="hero" className="hero">
         <h1 className="hero-title">
-          The Decentralized Workspace for <span className="text-gradient">Student Builders</span>
+          Student Innovation Meets <span className="text-gradient">Cryptographic</span>
         </h1>
         <p className="hero-description">
           A premium virtual launchpad linking AI Feasibility Analysis, MetaMask Blockchain IP Registries, and DAO Governance to seed tomorrow&apos;s student startups.
