@@ -97,4 +97,4 @@ Startora is built for the open-source future. Every feature added to our reposit
   <img src="./public/discord_Community_image.jpeg" alt="Click Me" width="320" style="border-radius: 8px;" />
 </a>
 
-👉 **[Click here to join the Startora Discord Community!](https://discord.gg/WsUCXPxnZ)**
+**[Click here to join the Startora Discord Community!](https://discord.gg/WsUCXPxnZ)**
