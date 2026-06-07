@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">Startora 🚀</h1>
+<h1 align="center">Startora</h1>
 
 <p align="center">
   <strong>The open-source platform for student founders.</strong>
@@ -15,7 +15,7 @@ Startora is a decentralized, high-performance web dashboard designed to bridge u
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 | Hero & Landing Page | Features Bento Grid |
 | :---: | :---: |
@@ -26,18 +26,18 @@ Startora is a decentralized, high-performance web dashboard designed to bridge u
 | ![Global Ecosystem](./public/screenshot_network.png) | ![Developer activity terminal](./public/screenshot_community.png) |
 
 ---
-## ✨ Key Features
+## Key Features
 
-- **🧠 FastAPI AI Microservice:** Implements intelligent NLP-based cosine similarity algorithms and automated business plan feasibility metrics to evaluate startup viability.
-- **⛓️ Polygon Smart Contract Registry:** Cryptographically seals ideas by posting SHA-256 fingerprints on-chain for secure, decentralized ownership verification.
-- **🗳️ DAO Consensus voting:** A token-weighted consensus sandbox where community upgrades and features are proposed and voted on democratically.
-- **🌐 3D Interactive Ecosystem Menu:** A hardware-accelerated WebGL rotating sphere using a **Fibonacci Sphere Distribution Algorithm** to display **30 completely unique startup categories** (with high-quality photography and dynamic scaling) mapping 1-to-1 to custom orbital nodes.
-- **🛠️ Direct System Architecture:** Interactive, glassmorphic system diagrams immediately visible on the platform to map developer flows, database synchronizations, and server connections.
-- **💻 Interactive Developer Sandbox:** Live-streamed repository logs and a custom Git-like console shell to simulate development workflows in real-time.
+- **FastAPI AI Microservice:** Implements intelligent NLP-based cosine similarity algorithms and automated business plan feasibility metrics to evaluate startup viability.
+- **Polygon Smart Contract Registry:** Cryptographically seals ideas by posting SHA-256 fingerprints on-chain for secure, decentralized ownership verification.
+- **DAO Consensus voting:** A token-weighted consensus sandbox where community upgrades and features are proposed and voted on democratically.
+- **3D Interactive Ecosystem Menu:** A hardware-accelerated WebGL rotating sphere using a **Fibonacci Sphere Distribution Algorithm** to display **30 completely unique startup categories** (with high-quality photography and dynamic scaling) mapping 1-to-1 to custom orbital nodes.
+- **Direct System Architecture:** Interactive, glassmorphic system diagrams immediately visible on the platform to map developer flows, database synchronizations, and server connections.
+- **Interactive Developer Sandbox:** Live-streamed repository logs and a custom Git-like console shell to simulate development workflows in real-time.
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Frontend:** React, Vite, Framer Motion (`motion/react`), GL-Matrix, GSAP (GreenSock), Lucide React
 - **Styling:** Custom glassmorphic CSS tokens and responsive breakpoint layout engines
@@ -48,7 +48,7 @@ Startora is a decentralized, high-performance web dashboard designed to bridge u
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -79,7 +79,7 @@ Ensure you have [Node.js](https://nodejs.org/) (v16+) and `npm` installed.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Startora is built for the open-source future. Every feature added to our repository is decided democratically via token-weighted consensus voting. 
 
