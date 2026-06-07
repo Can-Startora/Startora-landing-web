@@ -17,17 +17,6 @@ Startora is a decentralized, high-performance web dashboard designed to bridge u
 | ![Global Ecosystem](./public/screenshot_network.png) | ![Developer activity terminal](./public/screenshot_community.png) |
 
 ---
-
-## 💬 Join the Community
-
-<a href="https://discord.gg/WsUCXPxnZ">
-  <img src="./public/discord_Community_image.jpeg" alt="Click Me" width="320" style="border-radius: 8px;" />
-</a>
-
-👉 **[Click here to join the Startora Discord Community!](https://discord.gg/WsUCXPxnZ)**
-
----
-
 ## ✨ Key Features
 
 - **🧠 FastAPI AI Microservice:** Implements intelligent NLP-based cosine similarity algorithms and automated business plan feasibility metrics to evaluate startup viability.
@@ -90,3 +79,13 @@ Startora is built for the open-source future. Every feature added to our reposit
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
 4. Push to the branch (`git push origin feature/AmazingFeature`).
 5. Open a Pull Request.
+
+---
+
+## 💬 Join the Community
+
+<a href="https://discord.gg/WsUCXPxnZ">
+  <img src="./public/discord_Community_image.jpeg" alt="Click Me" width="320" style="border-radius: 8px;" />
+</a>
+
+👉 **[Click here to join the Startora Discord Community!](https://discord.gg/WsUCXPxnZ)**
