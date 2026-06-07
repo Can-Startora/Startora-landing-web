@@ -15,6 +15,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 const DB_FILE = path.join(__dirname, 'suggestions.json');
+const IDEAS_FILE = path.join(__dirname, 'ideas.json');
 
 app.use(cors());
 app.use(express.json());
@@ -45,9 +46,32 @@ const saveJsonSuggestions = (suggestions) => {
   }
 };
 
+const loadJsonIdeas = () => {
+  try {
+    if (!fs.existsSync(IDEAS_FILE)) {
+      fs.writeFileSync(IDEAS_FILE, JSON.stringify([], null, 2));
+      return [];
+    }
+    const data = fs.readFileSync(IDEAS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Error loading JSON ideas:', err);
+    return [];
+  }
+};
+
+const saveJsonIdeas = (ideas) => {
+  try {
+    fs.writeFileSync(IDEAS_FILE, JSON.stringify(ideas, null, 2));
+  } catch (err) {
+    console.error('Error saving JSON ideas:', err);
+  }
+};
+
 // MongoDB Database Operations
 let isMongoConnected = false;
 let Suggestion;
+let Idea;
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/startora';
 
@@ -75,6 +99,17 @@ try {
 
   Suggestion = mongoose.model('Suggestion', suggestionSchema);
 
+  const ideaSchema = new mongoose.Schema({
+    id: { type: String, required: true, unique: true },
+    category: { type: String, required: true },
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    proposedBy: { type: String, default: '@anonymous' },
+    createdAt: { type: Date, default: Date.now }
+  });
+
+  Idea = mongoose.model('Idea', ideaSchema);
+
   // Seed default suggestions if DB is empty
   const count = await Suggestion.countDocuments();
   if (count === 0) {
@@ -88,6 +123,61 @@ try {
 }
 
 // REST Endpoints
+app.get('/api/ideas', async (req, res) => {
+  const { category } = req.query;
+  if (!category) {
+    return res.status(400).json({ error: 'Category query parameter is required' });
+  }
+
+  if (isMongoConnected) {
+    try {
+      const dbIdeas = await Idea.find({ category }).sort({ createdAt: -1 });
+      return res.json(dbIdeas);
+    } catch (err) {
+      console.error('MongoDB GET ideas error, falling back to JSON:', err);
+    }
+  }
+
+  // JSON Fallback
+  const ideas = loadJsonIdeas();
+  const filteredIdeas = ideas
+    .filter(idea => idea.category === category)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  res.json(filteredIdeas);
+});
+
+app.post('/api/ideas', async (req, res) => {
+  const { category, title, description, proposedBy } = req.body;
+  if (!category || !title || !description) {
+    return res.status(400).json({ error: 'Category, Title, and Description are required' });
+  }
+
+  const newIdea = {
+    id: Date.now().toString(),
+    category,
+    title,
+    description,
+    proposedBy: proposedBy || '@anonymous',
+    createdAt: new Date().toISOString()
+  };
+
+  if (isMongoConnected) {
+    try {
+      const doc = new Idea(newIdea);
+      await doc.save();
+      return res.status(201).json(doc);
+    } catch (err) {
+      console.error('MongoDB POST ideas error, falling back to JSON:', err);
+    }
+  }
+
+  // JSON Fallback
+  const ideas = loadJsonIdeas();
+  ideas.push(newIdea);
+  saveJsonIdeas(ideas);
+  res.status(201).json(newIdea);
+});
+
 app.get('/api/suggestions', async (req, res) => {
   if (isMongoConnected) {
     try {

@@ -35,10 +35,12 @@ import ContributorConstellation from './components/ContributorConstellation';
 import TerminalSimulator from './components/TerminalSimulator';
 import DaoProposalSim from './components/DaoProposalSim';
 import Galaxy from './components/Galaxy';
+import ExploreModal from './components/ExploreModal';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [isSplashMounted, setIsSplashMounted] = useState(true);
+  const [exploredCategory, setExploredCategory] = useState(null);
 
 
   const [communityTab, setCommunityTab] = useState('constellation');
@@ -545,7 +547,7 @@ export default function App() {
           </div>
           <div className="network-visual glass">
             <div className="network-menu-container">
-              <InfiniteMenu items={networkItems} scale={menuScale} />
+              <InfiniteMenu items={networkItems} scale={menuScale} onExplore={setExploredCategory} />
             </div>
           </div>
         </div>
@@ -684,6 +686,13 @@ export default function App() {
       </footer>
 
       <Dock items={dockItems} />
+
+      {exploredCategory && (
+        <ExploreModal
+          category={exploredCategory}
+          onClose={() => setExploredCategory(null)}
+        />
+      )}
     </div>
   );
 }
