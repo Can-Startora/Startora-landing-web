@@ -436,7 +436,8 @@ export default function App() {
 
       <section id="hero" className="hero">
         <h1 className="hero-title">
-          Student Innovation Meets <span className="text-gradient">Cryptographic</span>
+          Student Innovation Meets <br />
+          <span className="text-gradient">Cryptographic Proof</span>
         </h1>
         <p className="hero-description">
           A premium virtual launchpad linking AI Feasibility Analysis, MetaMask Blockchain IP Registries, and DAO Governance to seed tomorrow&apos;s student startups.
