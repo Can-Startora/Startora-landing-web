@@ -11,7 +11,7 @@
 </p>
 
 
-Startora is a decentralized, high-performance web dashboard designed to bridge university boundaries and empower the next generation of student builders, developers, and business operators. By combining AI-driven feasibility analysis, on-chain IP registration, and token-weighted DAO governance, Startora provides a comprehensive, interactive sandbox ecosystem for virtual startup incubation.
+Startora is a decentralized, high-performance web dashboard designed to bridge university boundaries and empower the next generation of student builders, developers, and business operators.Building Startora, an open-source startup operating system for students. Think GitHub meets LinkedIn meets Y Combinator—designed specifically to help student founders discover teammates, validate ideas, and build venture-scale startups before they leave university.
 
 ---
 
