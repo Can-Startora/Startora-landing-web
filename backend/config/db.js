@@ -37,6 +37,7 @@ export const saveJsonSuggestions = (suggestions) => {
 export const loadJsonIdeas = () => {
   try {
     if (!fs.existsSync(IDEAS_FILE)) {
+      r
       fs.writeFileSync(IDEAS_FILE, JSON.stringify([], null, 2));
       return [];
     }
