@@ -270,6 +270,31 @@ app.get('/api/repo-stats', async (req, res) => {
       }
     }
 
+    let openIssuesList = [];
+    try {
+      const issuesRes = await fetch('https://api.github.com/repos/Manvikamboz/Startora/issues?state=open&per_page=3', {
+        headers: { 'User-Agent': 'Startora-App' }
+      });
+      if (issuesRes.ok) {
+        const issuesData = await issuesRes.json();
+        if (Array.isArray(issuesData)) {
+          // Filter out pull requests (they have pull_request property)
+          openIssuesList = issuesData
+            .filter(issue => !issue.pull_request)
+            .map(issue => ({
+              number: issue.number,
+              title: issue.title,
+              url: issue.html_url,
+              labels: issue.labels.map(l => l.name),
+              comments: issue.comments,
+              updatedAt: issue.updated_at
+            }));
+        }
+      }
+    } catch (err) {
+      console.warn('GitHub issues API fetch failed:', err);
+    }
+
     res.json({
       stargazers,
       forks,
@@ -277,7 +302,8 @@ app.get('/api/repo-stats', async (req, res) => {
       commitsCount,
       contributorsCount: contributors.length,
       contributors,
-      recentCommits
+      recentCommits,
+      openIssuesList
     });
   } catch (err) {
     console.error('Error fetching repo stats:', err);

@@ -12,130 +12,216 @@
   cursor: grabbing;
 }
 
-.action-button {
+/* Premium Glassmorphic Cards for Active Item Overlay */
+.menu-overlay-container {
   position: absolute;
-  left: 50%;
-  z-index: 10;
-  width: 50px;
-  height: 50px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg, var(--neon-teal), var(--neon-violet));
-  border: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.menu-overlay-container.active {
+  opacity: 1;
+}
+
+.menu-overlay-container.inactive {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Title Card (Left) */
+.menu-title-card {
+  position: absolute;
+  left: 4%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 280px;
+  padding: 24px;
+  background: rgba(17, 24, 39, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  pointer-events: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.menu-title-card:hover {
+  border-color: rgba(6, 182, 212, 0.25);
+  box-shadow: 0 12px 40px rgba(6, 182, 212, 0.1);
+}
+
+.menu-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--neon-teal);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--neon-teal);
   border-radius: 50%;
-  cursor: pointer;
-  border: 4px solid var(--bg-dark);
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+  box-shadow: 0 0 8px var(--neon-teal);
 }
 
-.action-button-icon {
-  user-select: none;
-  position: relative;
-  color: #fff;
-  top: 1px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.face-title {
-  user-select: none;
-  position: absolute;
-  font-family: var(--font-display);
+.menu-card-title {
+  font-size: 24px;
   font-weight: 900;
-  font-size: 2.2rem;
   color: #fff;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  top: 50%;
-  left: 6%;
-  transform: translateY(-50%);
-  width: 250px;
-  text-align: left;
-  pointer-events: none;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #fff 30%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.face-title.active {
-  opacity: 1;
-  transform: translateY(-50%);
-  pointer-events: auto;
-  transition: 0.5s ease;
+.menu-card-line {
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--neon-teal), transparent);
+  border-radius: 99px;
 }
 
-.face-title.inactive {
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(-50%) translateX(-20px);
-  transition: 0.1s ease;
-}
-
-.face-description {
-  user-select: none;
+/* Description Card (Right) */
+.menu-desc-card {
   position: absolute;
-  width: 250px;
+  right: 4%;
   top: 50%;
-  font-family: var(--font-body);
-  font-size: 1.05rem;
+  transform: translateY(-50%);
+  width: 320px;
+  padding: 24px;
+  background: rgba(17, 24, 39, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  pointer-events: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.menu-desc-card:hover {
+  border-color: rgba(139, 92, 246, 0.25);
+  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.1);
+}
+
+.menu-card-desc {
+  font-size: 14px;
   color: var(--text-secondary);
-  text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-  right: 6%;
-  transform: translateY(-50%);
-  text-align: right;
-  pointer-events: none;
+  line-height: 1.6;
+  margin: 0;
 }
 
-.face-description.active {
-  opacity: 1;
-  transform: translateY(-50%);
-  pointer-events: auto;
-  transition: 0.5s ease;
+.menu-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
 }
 
-.face-description.inactive {
-  pointer-events: none;
-  transform: translateY(-50%) translateX(20px);
-  opacity: 0;
-  transition: 0.1s ease;
+.menu-footer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--neon-violet);
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  padding: 4px 10px;
+  border-radius: 8px;
 }
 
-.action-button.active {
-  bottom: 2em;
-  transform: translateX(-50%) scale(1);
-  opacity: 1;
-  pointer-events: auto;
-  transition: 0.5s ease;
+.menu-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, var(--neon-teal) 0%, var(--neon-violet) 100%);
+  border: none;
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+  transition: all 0.2s ease;
 }
 
-.action-button.inactive {
-  bottom: -80px;
-  transform: translateX(-50%) scale(0);
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.1s ease;
+.menu-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(6, 182, 212, 0.35);
 }
 
+.btn-arrow {
+  font-size: 13px;
+}
+
+/* Responsiveness (Tablet/Mobile) */
 @media (max-width: 1024px) {
-  .face-title {
-    top: 5%;
+  .menu-title-card {
+    top: 4%;
     left: 50%;
-    transform: translate(-50%, 0);
-    font-size: 1.5rem;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 450px;
+    padding: 12px 18px;
     text-align: center;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
-  .face-title.active {
-    transform: translate(-50%, 0);
+  
+  .menu-card-badge {
+    margin-bottom: 4px;
   }
-  .face-description {
+  
+  .menu-card-title {
+    font-size: 18px;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  
+  .menu-card-line {
+    display: none;
+  }
+
+  .menu-desc-card {
     top: auto;
-    bottom: 22%;
+    bottom: 4%;
     left: 50%;
     right: auto;
-    transform: translate(-50%, 0);
-    font-size: 0.9rem;
-    text-align: center;
-    max-width: 80%;
-    width: 100%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 450px;
+    padding: 14px 18px;
+    gap: 10px;
   }
-  .face-description.active {
-    transform: translate(-50%, 0);
+  
+  .menu-card-desc {
+    font-size: 12px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  
+  .menu-card-footer {
+    margin-top: 2px;
+    justify-content: space-around;
   }
 }

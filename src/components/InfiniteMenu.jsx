@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { mat4, quat, vec2, vec3 } from 'gl-matrix';
+import { Sparkles } from 'lucide-react';
 import '../styles/InfiniteMenu.css';
 
 const discVertShaderSource = `#version 300 es
@@ -981,15 +982,32 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }) {
       <canvas id="infinite-grid-menu-canvas" ref={canvasRef} />
 
       {activeItem && (
-        <>
-          <h2 className={`face-title ${isMoving ? 'inactive' : 'active'}`}>{activeItem.title}</h2>
-
-          <p className={`face-description ${isMoving ? 'inactive' : 'active'}`}> {activeItem.description}</p>
-
-          <div onClick={handleButtonClick} className={`action-button ${isMoving ? 'inactive' : 'active'}`}>
-            <p className="action-button-icon">&#x2197;</p>
+        <div className={`menu-overlay-container ${isMoving ? 'inactive' : 'active'}`}>
+          {/* Left Card: Title Info */}
+          <div className="menu-title-card glass">
+            <div className="menu-card-badge">
+              <span className="badge-dot"></span>
+              ACTIVE SECTOR
+            </div>
+            <h3 className="menu-card-title">{activeItem.title}</h3>
+            <div className="menu-card-line"></div>
           </div>
-        </>
+
+          {/* Right Card: Description & CTA */}
+          <div className="menu-desc-card glass">
+            <p className="menu-card-desc">{activeItem.description}</p>
+            <div className="menu-card-footer">
+              <div className="menu-footer-badge">
+                <Sparkles style={{ width: '12px', height: '12px', color: 'var(--neon-teal)' }} />
+                <span>Sandbox Ready</span>
+              </div>
+              <button onClick={handleButtonClick} className="menu-action-btn" title="Open Link">
+                <span>Explore</span>
+                <span className="btn-arrow">&#x2197;</span>
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

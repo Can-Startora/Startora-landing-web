@@ -393,14 +393,21 @@ export default function App() {
           <div className="splash-glow-cyan" />
           <div className="splash-glow-violet" />
           <div className="splash-content">
+            <div className="splash-badge animate-float">
+              <Sparkles style={{ width: '12px', height: '12px', color: 'var(--neon-teal)', flexShrink: 0 }} />
+              <span>Actual Product Out Soon</span>
+            </div>
             <h1 className="splash-title">Startora</h1>
             <p className="splash-tagline">Creating Startups before graduation</p>
             <div className="splash-divider" />
+            <p className="splash-description">
+              The actual product will be out soon! In the meantime, feel free to enter and explore our interactive preview workspace showcasing the platform's features.
+            </p>
             <button
               className="splash-coming-soon cursor-target"
               onClick={() => setShowSplash(false)}
             >
-              Enter Workspace
+              Enter Preview Workspace
             </button>
           </div>
         </div>
