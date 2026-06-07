@@ -26,27 +26,6 @@ const INITIAL_CONTRIBUTORS = [
   { id: 1, name: "Manvi Kamboz", role: "Lead Architect", handle: "Manvikamboz", university: "Founder & Lead", avatar: "https://avatars.githubusercontent.com/u/178479748?v=4", xPercent: 50, yPercent: 45, radius: 14, color: "#06b6d4" }
 ];
 
-const FALLBACK_ISSUES = [
-  {
-    number: 14,
-    title: "Configure multi-wallet connection support (MetaMask, Coinbase, WalletConnect)",
-    url: "https://github.com/Manvikamboz/Startora/issues",
-    labels: ["good first issue", "enhancement"]
-  },
-  {
-    number: 12,
-    title: "Implement real-time notification toasts for smart contract event triggers",
-    url: "https://github.com/Manvikamboz/Startora/issues",
-    labels: ["bug", "help wanted"]
-  },
-  {
-    number: 9,
-    title: "Optimize 3D Constellation canvas rendering cycles for mobile viewports",
-    url: "https://github.com/Manvikamboz/Startora/issues",
-    labels: ["documentation", "good first issue"]
-  }
-];
-
 export default function ContributorConstellation() {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
@@ -98,11 +77,7 @@ export default function ContributorConstellation() {
             contributors: data.contributorsCount
           });
           
-          setOpenIssuesList(
-            data.openIssuesList && data.openIssuesList.length > 0 
-              ? data.openIssuesList 
-              : FALLBACK_ISSUES
-          );
+          setOpenIssuesList(data.openIssuesList || []);
 
           if (data.contributors && data.contributors.length > 0) {
             const mergedList = INITIAL_CONTRIBUTORS.map((node, index) => {
@@ -448,27 +423,42 @@ export default function ContributorConstellation() {
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {openIssuesList.map((issue, index) => (
-              <a 
-                key={index} 
-                href={issue.url} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="issue-item"
-              >
-                <div className="issue-title-row">
-                  <span className="issue-title">#{issue.number}: {issue.title}</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-rgba(255,255,255,0.3) flex-shrink-0" />
-                </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {issue.labels && issue.labels.map((lbl, idx) => (
-                    <span key={idx} className="issue-label">
-                      {lbl}
-                    </span>
-                  ))}
-                </div>
-              </a>
-            ))}
+            {openIssuesList.length > 0 ? (
+              openIssuesList.map((issue, index) => (
+                <a 
+                  key={index} 
+                  href={issue.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="issue-item"
+                >
+                  <div className="issue-title-row">
+                    <span className="issue-title">#{issue.number}: {issue.title}</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-rgba(255,255,255,0.3) flex-shrink-0" />
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {issue.labels && issue.labels.map((lbl, idx) => (
+                      <span key={idx} className="issue-label">
+                        {lbl}
+                      </span>
+                    ))}
+                  </div>
+                </a>
+              ))
+            ) : (
+              <div style={{
+                padding: '24px 16px',
+                borderRadius: '12px',
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                color: 'rgba(255, 255, 255, 0.4)',
+                textAlign: 'center',
+                fontSize: '13px',
+                lineHeight: 1.5
+              }}>
+                All caught up! No active open issues at the moment. Feel free to suggest an feature or bugfix on GitHub.
+              </div>
+            )}
           </div>
         </div>
       </div>
