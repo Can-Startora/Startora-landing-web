@@ -20,7 +20,9 @@ Startora is a decentralized, high-performance web dashboard designed to bridge u
 
 ## 💬 Join the Community
 
-[![Click Me](./public/discord_Community_image.jpeg)](https://discord.gg/WsUCXPxnZ)
+<a href="https://discord.gg/WsUCXPxnZ">
+  <img src="./public/discord_Community_image.jpeg" alt="Click Me" width="320" style="border-radius: 8px;" />
+</a>
 
 👉 **[Click here to join the Startora Discord Community!](https://discord.gg/WsUCXPxnZ)**
 
