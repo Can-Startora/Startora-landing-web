@@ -1,6 +1,15 @@
-# Startora 🚀
+<p align="center">
+  <a href="https://github.com/Manvikamboz/Startora">
+    <img src="./public/startora_logo.jpeg" alt="Startora Logo" width="120" style="border-radius: 24px;" />
+  </a>
+</p>
 
-> **The open-source platform for student founders.**
+<h1 align="center">Startora 🚀</h1>
+
+<p align="center">
+  <strong>The open-source platform for student founders.</strong>
+</p>
+
 
 Startora is a decentralized, high-performance web dashboard designed to bridge university boundaries and empower the next generation of student builders, developers, and business operators. By combining AI-driven feasibility analysis, on-chain IP registration, and token-weighted DAO governance, Startora provides a comprehensive, interactive sandbox ecosystem for virtual startup incubation.
 
