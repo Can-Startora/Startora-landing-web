@@ -875,10 +875,13 @@
   .whats-next-section,
   .founder-section {
     scroll-snap-align: start;
-    scroll-margin-top: 80px;
-    min-height: calc(100vh - 80px);
-    padding-top: 40px !important;
-    padding-bottom: 40px !important;
+    scroll-margin-top: 0px;
+    min-height: 100vh;
+    padding-top: 100px !important;
+    padding-bottom: 100px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .footer {
