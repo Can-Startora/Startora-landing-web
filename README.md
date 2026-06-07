@@ -18,6 +18,14 @@ Startora is a decentralized, high-performance web dashboard designed to bridge u
 
 ---
 
+## 💬 Join the Community
+
+[![Click Me](./public/discord_Community_image.jpeg)](https://discord.gg/WsUCXPxnZ)
+
+👉 **[Click here to join the Startora Discord Community!](https://discord.gg/WsUCXPxnZ)**
+
+---
+
 ## ✨ Key Features
 
 - **🧠 FastAPI AI Microservice:** Implements intelligent NLP-based cosine similarity algorithms and automated business plan feasibility metrics to evaluate startup viability.
