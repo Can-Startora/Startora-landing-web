@@ -16,6 +16,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const DB_FILE = path.join(__dirname, 'suggestions.json');
 const IDEAS_FILE = path.join(__dirname, 'ideas.json');
+const QUESTIONS_FILE = path.join(__dirname, 'questions.json');
 
 app.use(cors());
 app.use(express.json());
@@ -68,10 +69,33 @@ const saveJsonIdeas = (ideas) => {
   }
 };
 
+const loadJsonQuestions = () => {
+  try {
+    if (!fs.existsSync(QUESTIONS_FILE)) {
+      fs.writeFileSync(QUESTIONS_FILE, JSON.stringify([], null, 2));
+      return [];
+    }
+    const data = fs.readFileSync(QUESTIONS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Error loading JSON questions:', err);
+    return [];
+  }
+};
+
+const saveJsonQuestions = (questions) => {
+  try {
+    fs.writeFileSync(QUESTIONS_FILE, JSON.stringify(questions, null, 2));
+  } catch (err) {
+    console.error('Error saving JSON questions:', err);
+  }
+};
+
 // MongoDB Database Operations
 let isMongoConnected = false;
 let Suggestion;
 let Idea;
+let Question;
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/startora';
 
@@ -110,6 +134,23 @@ try {
 
   Idea = mongoose.model('Idea', ideaSchema);
 
+  const questionSchema = new mongoose.Schema({
+    id: { type: String, required: true, unique: true },
+    text: { type: String, required: true },
+    askedBy: { type: String, default: '@anonymous' },
+    createdAt: { type: Date, default: Date.now },
+    answers: [
+      {
+        id: { type: String, required: true },
+        text: { type: String, required: true },
+        answeredBy: { type: String, default: '@anonymous' },
+        createdAt: { type: Date, default: Date.now }
+      }
+    ]
+  });
+
+  Question = mongoose.model('Question', questionSchema);
+
   // Seed default suggestions if DB is empty
   const count = await Suggestion.countDocuments();
   if (count === 0) {
@@ -123,6 +164,95 @@ try {
 }
 
 // REST Endpoints
+app.get('/api/questions', async (req, res) => {
+  if (isMongoConnected) {
+    try {
+      const dbQuestions = await Question.find().sort({ createdAt: -1 });
+      return res.json(dbQuestions);
+    } catch (err) {
+      console.error('MongoDB GET questions error, falling back to JSON:', err);
+    }
+  }
+
+  // JSON Fallback
+  const questions = loadJsonQuestions();
+  const sortedQuestions = [...questions].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  res.json(sortedQuestions);
+});
+
+app.post('/api/questions', async (req, res) => {
+  const { text, askedBy } = req.body;
+  if (!text) {
+    return res.status(400).json({ error: 'Question text is required' });
+  }
+
+  const newQuestion = {
+    id: Date.now().toString(),
+    text,
+    askedBy: askedBy || '@anonymous',
+    createdAt: new Date().toISOString(),
+    answers: []
+  };
+
+  if (isMongoConnected) {
+    try {
+      const doc = new Question(newQuestion);
+      await doc.save();
+      return res.status(201).json(doc);
+    } catch (err) {
+      console.error('MongoDB POST question error, falling back to JSON:', err);
+    }
+  }
+
+  // JSON Fallback
+  const questions = loadJsonQuestions();
+  questions.push(newQuestion);
+  saveJsonQuestions(questions);
+  res.status(201).json(newQuestion);
+});
+
+app.post('/api/questions/:id/answers', async (req, res) => {
+  const { id } = req.params;
+  const { text, answeredBy } = req.body;
+
+  if (!text) {
+    return res.status(400).json({ error: 'Answer text is required' });
+  }
+
+  const newAnswer = {
+    id: Date.now().toString(),
+    text,
+    answeredBy: answeredBy || '@anonymous',
+    createdAt: new Date().toISOString()
+  };
+
+  if (isMongoConnected) {
+    try {
+      const updatedDoc = await Question.findOneAndUpdate(
+        { id: id },
+        { $push: { answers: newAnswer } },
+        { new: true }
+      );
+      if (updatedDoc) {
+        return res.status(201).json(updatedDoc);
+      }
+    } catch (err) {
+      console.error('MongoDB POST answer error, falling back to JSON:', err);
+    }
+  }
+
+  // JSON Fallback
+  const questions = loadJsonQuestions();
+  const index = questions.findIndex(q => q.id === id);
+  if (index === -1) {
+    return res.status(404).json({ error: 'Question not found' });
+  }
+
+  questions[index].answers.push(newAnswer);
+  saveJsonQuestions(questions);
+  res.status(201).json(questions[index]);
+});
+
 app.get('/api/ideas', async (req, res) => {
   const { category } = req.query;
   if (!category) {

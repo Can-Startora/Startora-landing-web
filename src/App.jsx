@@ -36,6 +36,7 @@ import TerminalSimulator from './components/TerminalSimulator';
 import DaoProposalSim from './components/DaoProposalSim';
 import Galaxy from './components/Galaxy';
 import ExploreModal from './components/ExploreModal';
+import CommunityQA from './components/CommunityQA';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -612,6 +613,8 @@ export default function App() {
           {communityTab === 'dao' && <DaoProposalSim />}
         </div>
       </section>
+
+      <CommunityQA />
 
       {/* Footer */}
       <footer className="footer">
