@@ -70,6 +70,34 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      if (scrollHeight > 0) {
+        const percentage = Math.round((scrollTop / scrollHeight) * 100);
+        setScrollProgress(percentage);
+      } else {
+        setScrollProgress(0);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const getScrollProgressString = () => {
+    const totalBars = 8;
+    const filled = Math.round((scrollProgress / 100) * totalBars);
+    const leftBars = '='.repeat(filled);
+    const rightBars = '='.repeat(totalBars - filled);
+    const pctStr = `${scrollProgress}%`.padStart(4, ' ');
+    return `[${leftBars} ${pctStr} ${rightBars}]`;
+  };
+
   const menuScale = windowWidth < 480 ? 0.8 : windowWidth < 768 ? 0.95 : windowWidth < 1024 ? 1.15 : 1.4;
 
   useEffect(() => {
