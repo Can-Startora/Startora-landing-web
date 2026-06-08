@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HelpCircle, MessageSquare, Send, User, Calendar, PlusCircle, ArrowDown } from 'lucide-react';
 import '../styles/CommunityQA.css';
+import { API_BASE_URL } from '../config';
 
 export default function CommunityQA() {
   const [questions, setQuestions] = useState([]);
@@ -21,7 +22,7 @@ export default function CommunityQA() {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:3001/api/questions');
+      const res = await fetch(`${API_BASE_URL}/api/questions`);
       if (!res.ok) throw new Error('Failed to fetch questions');
       const data = await res.json();
       setQuestions(data);
@@ -47,7 +48,7 @@ export default function CommunityQA() {
 
     try {
       setSubmitting(true);
-      const res = await fetch('http://localhost:3001/api/questions', {
+      const res = await fetch(`${API_BASE_URL}/api/questions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -77,7 +78,7 @@ export default function CommunityQA() {
     if (!answerForm.answeredBy.trim()) return;
 
     try {
-      const res = await fetch(`http://localhost:3001/api/questions/${questionId}/answers`, {
+      const res = await fetch(`${API_BASE_URL}/api/questions/${questionId}/answers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

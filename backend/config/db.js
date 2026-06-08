@@ -6,10 +6,10 @@ import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// JSON DB Files are kept at the project root for persistence/compatibility
-export const DB_FILE = path.resolve(__dirname, '../../suggestions.json');
-export const IDEAS_FILE = path.resolve(__dirname, '../../ideas.json');
-export const QUESTIONS_FILE = path.resolve(__dirname, '../../questions.json');
+// JSON DB Files are kept inside the backend/data directory for clean structure
+export const DB_FILE = path.resolve(__dirname, '../data/suggestions.json');
+export const IDEAS_FILE = path.resolve(__dirname, '../data/ideas.json');
+export const QUESTIONS_FILE = path.resolve(__dirname, '../data/questions.json');
 
 // JSON database operations helpers
 export const loadJsonSuggestions = () => {

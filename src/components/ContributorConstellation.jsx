@@ -14,6 +14,7 @@ import {
   Database,
   Sparkles
 } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const GithubIcon = (props) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -68,7 +69,7 @@ export default function ContributorConstellation() {
 
     const fetchRepoStats = async () => {
       try {
-        const res = await fetch('/api/repo-stats');
+        const res = await fetch(`${API_BASE_URL}/api/repo-stats`);
         if (res.ok) {
           const data = await res.json();
           setStats({

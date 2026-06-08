@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Send, User, Folder, Calendar, Sparkles, Lightbulb } from 'lucide-react';
 import '../styles/ExploreModal.css';
+import { API_BASE_URL } from '../config';
 
 export default function ExploreModal({ category, onClose }) {
   const [ideas, setIdeas] = useState([]);
@@ -20,7 +21,7 @@ export default function ExploreModal({ category, onClose }) {
     const fetchIdeas = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:3001/api/ideas?category=${encodeURIComponent(category.title)}`);
+        const res = await fetch(`${API_BASE_URL}/api/ideas?category=${encodeURIComponent(category.title)}`);
         if (!res.ok) throw new Error('Failed to fetch ideas');
         const data = await res.json();
         if (active) {
@@ -59,7 +60,7 @@ export default function ExploreModal({ category, onClose }) {
 
     try {
       setSubmitting(true);
-      const res = await fetch('http://localhost:3001/api/ideas', {
+      const res = await fetch(`${API_BASE_URL}/api/ideas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

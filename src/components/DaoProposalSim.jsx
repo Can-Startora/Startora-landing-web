@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Vote, Plus, Award, CheckCircle, XCircle, Loader2, Calendar, User, FileText } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const PRESET_VOTERS = [
   { name: '@Manvikamboz', weight: 45.2, vote: 'YES' },
@@ -28,7 +29,7 @@ export default function DaoProposalSim() {
   const fetchSuggestions = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch('/api/suggestions');
+      const res = await fetch(`${API_BASE_URL}/api/suggestions`);
       const data = await res.json();
       setSuggestions(data);
     } catch (err) {
@@ -48,7 +49,7 @@ export default function DaoProposalSim() {
 
     try {
       setIsSubmitting(true);
-      const res = await fetch('/api/suggestions', {
+      const res = await fetch(`${API_BASE_URL}/api/suggestions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -117,7 +118,7 @@ export default function DaoProposalSim() {
         const finalStatus = yesPercent > 50 ? 'passed' : 'rejected';
         
         try {
-          await fetch(`/api/suggestions/${activeProposal.id}/vote`, {
+          await fetch(`${API_BASE_URL}/api/suggestions/${activeProposal.id}/vote`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Terminal, Send, GitCommit, GitBranch, Clock } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const STATIC_CONTRACTS_RESPONSE = [
   'Checking deployed smart contracts on local testnet...',
@@ -47,7 +48,7 @@ export default function TerminalSimulator() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch('/api/repo-stats');
+        const res = await fetch(`${API_BASE_URL}/api/repo-stats`);
         if (res.ok) {
           const data = await res.json();
           setStats({
