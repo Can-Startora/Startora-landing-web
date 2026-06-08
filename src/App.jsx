@@ -16,7 +16,9 @@ import {
   Send,
   Mail,
   Code2,
-  Home
+  Home,
+  Users,
+  TrendingUp
 } from 'lucide-react';
 
 const GithubIcon = (props) => (
@@ -468,6 +470,106 @@ export default function App() {
           <a href="#features" className="btn-secondary cursor-target">
             Explore Features <ArrowRight className="w-4 h-4" />
           </a>
+        </div>
+      </section>
+
+      {/* Product Journey Section */}
+      <section id="vision" className="product-vision-section">
+        <div className="section-header">
+          <h2 className="section-title text-gradient">The Product Journey</h2>
+          <p className="section-description">
+            Startora currently operates as an interactive incubator sandbox. The fully realized platform will support your entire startup lifecycle:
+          </p>
+        </div>
+
+        <div className="vision-grid">
+          {/* Card 1: Finding teammates */}
+          <BorderGlow
+            className="feature-card glass-interactive"
+            edgeSensitivity={25}
+            glowColor="180 100 50"
+            backgroundColor="var(--bg-card)"
+            borderRadius={24}
+            glowRadius={48}
+            glowIntensity={1.6}
+            coneSpread={28}
+            animated={false}
+            colors={['#06b6d4', '#3b82f6', '#10b981']}
+          >
+            <div className="feature-icon-box" style={{ background: 'rgba(6, 182, 212, 0.1)', color: 'var(--neon-teal)' }}>
+              <Users className="w-6 h-6" />
+            </div>
+            <h3 className="feature-title">1. Finding Teammates</h3>
+            <p className="feature-text">
+              Assemble your dream team of student builders, designers, and operators across universities with specialized skill-matching.
+            </p>
+          </BorderGlow>
+
+          {/* Card 2: Building projects */}
+          <BorderGlow
+            className="feature-card glass-interactive"
+            edgeSensitivity={25}
+            glowColor="260 100 65"
+            backgroundColor="var(--bg-card)"
+            borderRadius={24}
+            glowRadius={48}
+            glowIntensity={1.6}
+            coneSpread={28}
+            animated={false}
+            colors={['#8b5cf6', '#d946ef', '#6366f1']}
+          >
+            <div className="feature-icon-box" style={{ background: 'rgba(139, 92, 246, 0.1)', color: 'var(--neon-violet)' }}>
+              <Code2 className="w-6 h-6" />
+            </div>
+            <h3 className="feature-title">2. Building Projects</h3>
+            <p className="feature-text">
+              Utilize collaborative workspaces, version tracking, and milestones designed specifically for rapid prototyping.
+            </p>
+          </BorderGlow>
+
+          {/* Card 3: Getting users */}
+          <BorderGlow
+            className="feature-card glass-interactive"
+            edgeSensitivity={25}
+            glowColor="30 100 55"
+            backgroundColor="var(--bg-card)"
+            borderRadius={24}
+            glowRadius={48}
+            glowIntensity={1.6}
+            coneSpread={28}
+            animated={false}
+            colors={['#f59e0b', '#ef4444', '#ec4899']}
+          >
+            <div className="feature-icon-box" style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
+              <TrendingUp className="w-6 h-6" />
+            </div>
+            <h3 className="feature-title">3. Getting Users</h3>
+            <p className="feature-text">
+              Access built-in launchboards, beta testing pools, and student feedback loops to acquire your first 100 passionate users.
+            </p>
+          </BorderGlow>
+
+          {/* Card 4: Launching startups */}
+          <BorderGlow
+            className="feature-card glass-interactive"
+            edgeSensitivity={25}
+            glowColor="340 100 60"
+            backgroundColor="var(--bg-card)"
+            borderRadius={24}
+            glowRadius={48}
+            glowIntensity={1.6}
+            coneSpread={28}
+            animated={false}
+            colors={['#ec4899', '#f43f5e', '#a855f7']}
+          >
+            <div className="feature-icon-box" style={{ background: 'rgba(236, 72, 153, 0.1)', color: 'var(--neon-pink)' }}>
+              <Rocket className="w-6 h-6" />
+            </div>
+            <h3 className="feature-title">4. Launching Startups</h3>
+            <p className="feature-text">
+              Enable seamless transitions to legal company formation, institutional funding access, and real-world accelerator pipelines.
+            </p>
+          </BorderGlow>
         </div>
       </section>
 

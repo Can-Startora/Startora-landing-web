@@ -115,6 +115,33 @@
   gap: 16px;
 }
 
+/* Product Vision Section */
+.product-vision-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 24px;
+  position: relative;
+}
+
+.vision-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 56px;
+}
+
+@media (max-width: 1024px) {
+  .vision-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .vision-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Features Grid */
 .features-section {
   max-width: 1200px;
@@ -561,6 +588,7 @@
   .hero-title {
     font-size: 54px;
   }
+  .product-vision-section,
   .features-section,
   .network-section,
   .arch-section,
@@ -778,6 +806,7 @@
     scroll-snap-type: none;
   }
   .hero,
+  .product-vision-section,
   .features-section,
   .network-section,
   .arch-section,
@@ -839,6 +868,7 @@
 
 /* Base Layout for all screen sizes */
 .hero,
+.product-vision-section,
 .features-section,
 .network-section,
 .arch-section,
@@ -870,6 +900,7 @@
   }
 
   .hero,
+  .product-vision-section,
   .features-section,
   .network-section,
   .arch-section,
