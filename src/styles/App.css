@@ -861,6 +861,10 @@
     overflow-y: scroll;
   }
 
+  html.no-snap {
+    scroll-snap-type: none !important;
+  }
+
   body {
     overflow-y: visible;
   }

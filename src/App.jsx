@@ -45,6 +45,21 @@ export default function App() {
 
 
   const [communityTab, setCommunityTab] = useState('constellation');
+
+  const handleTabChange = (tabName) => {
+    document.documentElement.classList.add('no-snap');
+    setCommunityTab(tabName);
+    requestAnimationFrame(() => {
+      const section = document.getElementById('community');
+      if (section) {
+        section.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }
+      setTimeout(() => {
+        document.documentElement.classList.remove('no-snap');
+      }, 100);
+    });
+  };
+
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
   useEffect(() => {
@@ -587,19 +602,19 @@ export default function App() {
         {/* Tab Switch Controls */}
         <div className="community-tab-controls glass">
           <button
-            onClick={() => setCommunityTab('constellation')}
+            onClick={() => handleTabChange('constellation')}
             className={`community-tab-btn cursor-target ${communityTab === 'constellation' ? 'active' : ''}`}
           >
             Contributor Constellation
           </button>
           <button
-            onClick={() => setCommunityTab('terminal')}
+            onClick={() => handleTabChange('terminal')}
             className={`community-tab-btn cursor-target ${communityTab === 'terminal' ? 'active' : ''}`}
           >
             Live Activity Terminal
           </button>
           <button
-            onClick={() => setCommunityTab('dao')}
+            onClick={() => handleTabChange('dao')}
             className={`community-tab-btn cursor-target ${communityTab === 'dao' ? 'active' : ''}`}
           >
             Governance Proposal Board
