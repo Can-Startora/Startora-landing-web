@@ -27,6 +27,27 @@ const INITIAL_CONTRIBUTORS = [
   { id: 1, name: "Manvi Kamboz", role: "Lead Architect", handle: "Manvikamboz", university: "Founder & Lead", avatar: "https://avatars.githubusercontent.com/u/178479748?v=4", xPercent: 50, yPercent: 45, radius: 14, color: "#06b6d4" }
 ];
 
+const FALLBACK_ISSUES = [
+  {
+    number: 1,
+    title: "Optimize landing page animations performance",
+    url: "https://github.com/Manvikamboz/Startora/issues",
+    labels: ["performance", "animation"]
+  },
+  {
+    number: 2,
+    title: "Add unit tests for Mongoose schemas fallback handler",
+    url: "https://github.com/Manvikamboz/Startora/issues",
+    labels: ["testing", "backend"]
+  },
+  {
+    number: 3,
+    title: "Implement zero-knowledge proof verification demo",
+    url: "https://github.com/Manvikamboz/Startora/issues",
+    labels: ["web3", "feature"]
+  }
+];
+
 export default function ContributorConstellation() {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
