@@ -297,7 +297,10 @@ export default function App() {
       title: 'NanoTech & Advanced Materials',
       description: 'Carbon nanotube lattices, molecular design simulations, and automated material strength models.'
     }
-  ];
+  ].map(item => ({
+    ...item,
+    image: `${import.meta.env.BASE_URL}${item.image.startsWith('/') ? item.image.slice(1) : item.image}`
+  }));
 
   const dockItems = [
     {
