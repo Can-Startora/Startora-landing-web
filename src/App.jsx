@@ -465,17 +465,19 @@ export default function App() {
       )}
 
       {/* Ambient Matrix Rain / LetterGlitch Background */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -10, pointerEvents: 'none', opacity: 0.15 }}>
-        <LetterGlitch
-          glitchSpeed={50}
-          centerVignette={true}
-          outerVignette={false}
-          smooth
-          colors={["#2b4539", "#61dca3", "#61b3dc"]}
-          showCenterVignette
-          showOuterVignette={false}
-        />
-      </div>
+      {windowWidth >= 768 && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -10, pointerEvents: 'none', opacity: 0.15 }}>
+          <LetterGlitch
+            glitchSpeed={50}
+            centerVignette={true}
+            outerVignette={false}
+            smooth
+            colors={["#2b4539", "#61dca3", "#61b3dc"]}
+            showCenterVignette
+            showOuterVignette={false}
+          />
+        </div>
+      )}
 
       {/* Background spotlights */}
       <div className="glow-spotlight animate-drift" style={{ width: '40vw', height: '40vw', top: '-10%', left: '-10%', background: 'var(--neon-teal)' }}></div>

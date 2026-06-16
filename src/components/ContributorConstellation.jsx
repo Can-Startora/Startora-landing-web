@@ -183,7 +183,34 @@ export default function ContributorConstellation() {
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseleave', handleMouseLeave);
 
+    let isIntersecting = false;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const nextIntersecting = entry.isIntersecting;
+        if (nextIntersecting !== isIntersecting) {
+          isIntersecting = nextIntersecting;
+          if (isIntersecting) {
+            if (!animationFrameId) {
+              draw();
+            }
+          } else {
+            if (animationFrameId) {
+              cancelAnimationFrame(animationFrameId);
+              animationFrameId = null;
+            }
+          }
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    if (canvas) {
+      observer.observe(canvas);
+    }
+
     const draw = () => {
+      if (!isIntersecting) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const nodes = nodesRef.current;
@@ -256,13 +283,12 @@ export default function ContributorConstellation() {
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    draw();
-
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       if (canvas) {
         canvas.removeEventListener('mousemove', handleMouseMove);
         canvas.removeEventListener('mouseleave', handleMouseLeave);
+        observer.unobserve(canvas);
       }
       cancelAnimationFrame(animationFrameId);
     };

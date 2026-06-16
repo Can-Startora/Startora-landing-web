@@ -450,24 +450,41 @@ class ArcballControl {
     this._rotationVelocity = 0;
     this._combinedQuat = quat.create();
 
-    canvas.addEventListener('pointerdown', e => {
+    this.onPointerDown = e => {
       vec2.set(this.pointerPos, e.clientX, e.clientY);
       vec2.copy(this.previousPointerPos, this.pointerPos);
       this.isPointerDown = true;
-    });
-    canvas.addEventListener('pointerup', () => {
+    };
+
+    this.onPointerUp = () => {
       this.isPointerDown = false;
-    });
-    canvas.addEventListener('pointerleave', () => {
+    };
+
+    this.onPointerLeave = () => {
       this.isPointerDown = false;
-    });
-    canvas.addEventListener('pointermove', e => {
+    };
+
+    this.onPointerMove = e => {
       if (this.isPointerDown) {
         vec2.set(this.pointerPos, e.clientX, e.clientY);
       }
-    });
+    };
+
+    canvas.addEventListener('pointerdown', this.onPointerDown);
+    canvas.addEventListener('pointerup', this.onPointerUp);
+    canvas.addEventListener('pointerleave', this.onPointerLeave);
+    canvas.addEventListener('pointermove', this.onPointerMove);
 
     canvas.style.touchAction = 'none';
+  }
+
+  destroy() {
+    if (this.canvas) {
+      this.canvas.removeEventListener('pointerdown', this.onPointerDown);
+      this.canvas.removeEventListener('pointerup', this.onPointerUp);
+      this.canvas.removeEventListener('pointerleave', this.onPointerLeave);
+      this.canvas.removeEventListener('pointermove', this.onPointerMove);
+    }
   }
 
   update(deltaTime, targetFrameDuration = 16) {
@@ -620,6 +637,10 @@ class InfiniteGridMenu {
   }
 
   run(time = 0) {
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+    }
+
     this.#deltaTime = Math.min(32, time - this.#time);
     this.#time = time;
     this.#deltaFrames = this.#deltaTime / this.TARGET_FRAME_DURATION;
@@ -628,7 +649,21 @@ class InfiniteGridMenu {
     this.#animate(this.#deltaTime);
     this.#render();
 
-    requestAnimationFrame(t => this.run(t));
+    this.animationFrameId = requestAnimationFrame(t => this.run(t));
+  }
+
+  destroy() {
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
+    if (this.control && typeof this.control.destroy === 'function') {
+      this.control.destroy();
+    }
+    const extension = this.gl?.getExtension('WEBGL_lose_context');
+    if (extension) {
+      extension.loseContext();
+    }
   }
 
   #init(onInit) {
@@ -933,8 +968,21 @@ export default function InfiniteMenu({ items = [], scale = 1.0, onExplore }) {
   const canvasRef = useRef(null);
   const [activeItem, setActiveItem] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [webglSupported, setWebglSupported] = useState(true);
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile || !webglSupported) return;
+
     const canvas = canvasRef.current;
     let sketch;
 
@@ -944,14 +992,46 @@ export default function InfiniteMenu({ items = [], scale = 1.0, onExplore }) {
     };
 
     if (canvas) {
-      sketch = new InfiniteGridMenu(
-        canvas,
-        items.length ? items : defaultItems,
-        handleActiveItem,
-        setIsMoving,
-        sk => sk.run(),
-        scale
-      );
+      try {
+        sketch = new InfiniteGridMenu(
+          canvas,
+          items.length ? items : defaultItems,
+          handleActiveItem,
+          setIsMoving,
+          null, // do not run immediately, IntersectionObserver handles it
+          scale
+        );
+      } catch (e) {
+        console.warn('WebGL2 is not supported or failed to initialize:', e);
+        setWebglSupported(false);
+        return;
+      }
+    }
+
+    // intersection observer to pause rendering when canvas is not visible
+    let isIntersecting = false;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const nextIntersecting = entry.isIntersecting;
+        if (nextIntersecting !== isIntersecting) {
+          isIntersecting = nextIntersecting;
+          if (sketch) {
+            if (isIntersecting) {
+              sketch.run();
+            } else {
+              if (sketch.animationFrameId) {
+                cancelAnimationFrame(sketch.animationFrameId);
+                sketch.animationFrameId = null;
+              }
+            }
+          }
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    if (canvas) {
+      observer.observe(canvas);
     }
 
     const handleResize = () => {
@@ -965,8 +1045,14 @@ export default function InfiniteMenu({ items = [], scale = 1.0, onExplore }) {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      if (canvas) {
+        observer.unobserve(canvas);
+      }
+      if (sketch) {
+        sketch.destroy();
+      }
     };
-  }, [items, scale]);
+  }, [items, scale, isMobile, webglSupported]);
 
   const handleButtonClick = () => {
     if (onExplore && activeItem) {
@@ -979,6 +1065,52 @@ export default function InfiniteMenu({ items = [], scale = 1.0, onExplore }) {
       }
     }
   };
+
+  if (isMobile || !webglSupported) {
+    return (
+      <div className="mobile-menu-carousel-wrapper">
+        <div className="mobile-menu-carousel">
+          {items.map((item, index) => (
+            <div key={index} className="mobile-menu-card glass">
+              <div className="mobile-menu-card-image-box">
+                <img src={item.image} alt={item.title} className="mobile-menu-card-image" />
+                <div className="mobile-menu-card-badge">
+                  <span className="badge-dot"></span>
+                  <span>Active Sector</span>
+                </div>
+              </div>
+              <div className="mobile-menu-card-content">
+                <h3 className="mobile-menu-card-title">{item.title}</h3>
+                <p className="mobile-menu-card-desc">{item.description}</p>
+                <div className="mobile-menu-card-footer">
+                  <div className="mobile-menu-footer-badge">
+                    <Sparkles style={{ width: '11px', height: '11px', color: 'var(--neon-violet)' }} />
+                    <span>Sandbox Ready</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      if (onExplore) {
+                        onExplore(item);
+                      } else if (item.link) {
+                        window.open(item.link, '_blank');
+                      }
+                    }}
+                    className="mobile-menu-action-btn"
+                  >
+                    <span>Explore</span>
+                    <span className="btn-arrow">&#x2197;</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mobile-carousel-hint">
+          <span>Swipe left or right to explore startup sectors</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>

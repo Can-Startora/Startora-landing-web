@@ -801,10 +801,7 @@
     justify-content: center;
   }
 
-  /* Relax scroll snap on mobile */
-  html {
-    scroll-snap-type: none;
-  }
+  /* Keep scroll snap active on mobile but with custom spacing */
   .hero,
   .product-vision-section,
   .features-section,
@@ -815,7 +812,6 @@
   .community-section,
   .whats-next-section,
   .founder-section {
-    min-height: unset;
     padding-top: 60px !important;
     padding-bottom: 60px !important;
   }
@@ -883,45 +879,50 @@
   box-sizing: border-box;
 }
 
-/* Scroll Snapping behavior for desktop screens */
-@media (min-width: 769px) {
+/* Scroll Snapping behavior (Global) */
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+}
+
+@media (max-width: 768px) {
   html {
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-    overflow-y: scroll;
+    scroll-snap-type: y proximity;
   }
+}
 
-  html.no-snap {
-    scroll-snap-type: none !important;
-  }
+html.no-snap {
+  scroll-snap-type: none !important;
+}
 
-  body {
-    overflow-y: visible;
-  }
+body {
+  overflow-y: visible;
+}
 
-  .hero,
-  .product-vision-section,
-  .features-section,
-  .network-section,
-  .arch-section,
-  .dev-cta-section,
-  .faq-section,
-  .community-section,
-  .whats-next-section,
-  .founder-section {
-    scroll-snap-align: start;
-    scroll-margin-top: 0px;
-    min-height: 100vh;
-    padding-top: 100px !important;
-    padding-bottom: 100px !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
+.hero,
+.product-vision-section,
+.features-section,
+.network-section,
+.arch-section,
+.dev-cta-section,
+.faq-section,
+.community-section,
+.whats-next-section,
+.founder-section {
+  scroll-snap-align: start;
+  scroll-margin-top: 0px;
+  min-height: 100vh;
+  padding-top: 100px !important;
+  padding-bottom: 100px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
 
-  .footer {
-    scroll-snap-align: end;
-  }
+.footer {
+  scroll-snap-align: end;
 }
 
 /* Global scroll behavior */

@@ -14,7 +14,7 @@ void main() {
 }
 `;
 
-const fragmentShader = `
+const fragmentShader = (numLayers) => `
 precision highp float;
 
 uniform float uTime;
@@ -38,7 +38,7 @@ uniform bool uTransparent;
 
 varying vec2 vUv;
 
-#define NUM_LAYER 4.0
+#define NUM_LAYER ${parseFloat(numLayers).toFixed(1)}
 #define STAR_COLOR_CUTOFF 0.2
 #define MAT45 mat2(0.7071, -0.7071, 0.7071, 0.7071)
 #define PERIOD 3.0
@@ -228,10 +228,11 @@ export default function Galaxy({
     window.addEventListener('resize', resize, false);
     resize();
 
+    const layers = window.innerWidth < 768 ? 1.0 : 4.0;
     const geometry = new Triangle(gl);
     program = new Program(gl, {
       vertex: vertexShader,
-      fragment: fragmentShader,
+      fragment: fragmentShader(layers),
       uniforms: {
         uTime: { value: 0 },
         uResolution: {
