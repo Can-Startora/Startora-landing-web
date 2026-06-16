@@ -12,18 +12,6 @@ We're building Startora, an open-source startup operating system for students. T
 
 ---
 
-## Screenshots
-
-| Hero & Landing Page | Features Bento Grid |
-| :---: | :---: |
-| ![Hero Section](./public/screenshot_hero.png) | ![Features Section](./public/screenshot_features.png) |
-
-| Global Ecosystem | Developer Activity Terminal |
-| :---: | :---: |
-| ![Global Ecosystem](./public/screenshot_network.png) | ![Developer activity terminal](./public/screenshot_community.png) |
-
----
-
 ## Why Startora?
 
 - **Zero-Friction Co-founding:** Connect with other university builders across different disciplines and institutions.
