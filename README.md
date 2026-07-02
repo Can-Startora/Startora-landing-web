@@ -8,6 +8,12 @@
 
 > The open-source platform for student founders.
 
+This repository contains the codebase for the **Startora Landing Page**.
+
+👉 **Looking for the main platform?** You can find the main application and core codebase here: **[Can-Startora/Startora](https://github.com/Can-Startora/Startora)**.
+
+---
+
 We're building Startora, an open-source startup operating system for students. Think GitHub meets LinkedIn meets Y Combinator—designed specifically to help student founders discover teammates, validate ideas, and build venture-scale startups before they leave university.
 
 ---
