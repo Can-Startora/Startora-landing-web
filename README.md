@@ -88,15 +88,6 @@ Ensure you have [Node.js](https://nodejs.org/) (v16+) and `npm` installed.
 
 ---
 
-## Roadmap
-
-- [x] **Phase 1: Foundation** — Setup WebGL 3D interface, responsive glassmorphic design system, and Express server fallback databases.
-- [x] **Phase 2: Incubation Core** — Build Category Exploration modals and Community Q&A modules.
-- [ ] **Phase 3: Smart Contract Deployments** — Integrate MetaMask wallet connection and deploy Polygon IP registry smart contracts.
-- [ ] **Phase 4: AI Recommendations** — Connect the FastAPI recommendation engine to compute real-time feasibility metrics.
-
----
-
 ## Contributing
 
 Startora is built for the open-source future. Every feature added to our repository is decided democratically via token-weighted consensus voting. 
