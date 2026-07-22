@@ -2,9 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(({ mode }) => {
   return {
-    base: mode === 'production' ? '/Startora/' : '/',
+    base: mode === 'production' ? (process.env.VITE_BASE_URL || '/Startora/') : '/',
     plugins: [react()],
     server: {
       proxy: {
