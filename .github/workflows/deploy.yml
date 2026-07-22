@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -27,11 +28,17 @@ jobs:
 
       - name: Build
         env:
+          NODE_ENV: production
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: npm run build
 
-      - name: Deploy
+      - name: Add .nojekyll
+        run: touch ./dist/.nojekyll
+
+      - name: Deploy to Can-Startora/Startora gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          personal_token: ${{ secrets.DEPLOY_TOKEN }}
+          external_repository: Can-Startora/Startora
           publish_dir: ./dist
+          publish_branch: gh-pages
