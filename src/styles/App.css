@@ -866,11 +866,16 @@
   box-sizing: border-box;
 }
 
-/* Scroll Snapping behavior (desktop only) */
+/* ═══════════════════════════════════════════════════
+   SCROLL SNAP — ONE SECTION PER SCREEN (ALL DEVICES)
+   Uses 100dvh: adapts when mobile browser bar appears
+   ═══════════════════════════════════════════════════ */
+
 html {
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   overflow-y: scroll;
+  overscroll-behavior-y: none; /* prevent pull-to-refresh fighting snap */
 }
 
 html.no-snap {
@@ -879,9 +884,10 @@ html.no-snap {
 
 body {
   overflow-y: visible;
+  overscroll-behavior-y: none;
 }
 
-/* Desktop: full-height snap sections */
+/* Every section = exactly one screen tall, always */
 .hero,
 .product-vision-section,
 .features-section,
@@ -893,26 +899,47 @@ body {
 .whats-next-section,
 .founder-section {
   scroll-snap-align: start;
+  scroll-snap-stop: always;       /* never skip a section */
   scroll-margin-top: 0px;
-  min-height: 100vh;
-  padding-top: 100px !important;
-  padding-bottom: 100px !important;
+
+  /* dvh = Dynamic Viewport Height — shrinks when mobile browser bar shows */
+  min-height: 100dvh;
+  height: 100dvh;                 /* lock each section to one screen */
+  overflow-y: auto;               /* scroll within section if content overflows */
+  overflow-x: hidden;
+
+  /* Padding: min 60px, preferred 8vh, max 120px — scales with screen */
+  padding-top:    clamp(60px, 8dvh, 120px);
+  padding-bottom: clamp(60px, 8dvh, 120px);
+  padding-left:   clamp(16px, 4vw, 48px);
+  padding-right:  clamp(16px, 4vw, 48px);
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   box-sizing: border-box;
+  position: relative;
+}
+
+/* QA section participates in snap too */
+.qa-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .footer {
-  scroll-snap-align: end;
+  scroll-snap-align: start;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 48px);
 }
 
-/* ─── Mobile: DISABLE scroll-snap, let sections flow naturally ─── */
+/* ── Mobile-specific snap tuning (keep snap ON, just tune heights) ── */
 @media (max-width: 768px) {
-  html {
-    scroll-snap-type: none !important;
-  }
-
+  /* On small screens, sections still fill the full dynamic viewport */
   .hero,
   .product-vision-section,
   .features-section,
@@ -923,22 +950,19 @@ body {
   .community-section,
   .whats-next-section,
   .founder-section {
-    scroll-snap-align: none !important;
-    min-height: unset !important;        /* no forced full-screen height */
-    padding-top: 56px !important;
-    padding-bottom: 56px !important;
-    justify-content: flex-start !important;
+    height: 100dvh;
+    min-height: 100dvh;
+    /* Tighter padding on small screens */
+    padding-top:    clamp(56px, 10dvh, 80px);
+    padding-bottom: clamp(56px, 10dvh, 80px);
+    padding-left:   16px;
+    padding-right:  16px;
+    justify-content: flex-start;  /* top-align so header doesn't clip content */
   }
 
   .footer {
-    scroll-snap-align: none;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 80px);
   }
-}
-
-/* Global scroll behavior */
-html {
-  scroll-behavior: smooth;
 }
 
 /* FAQ Section */
@@ -1630,8 +1654,9 @@ html {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   COMPREHENSIVE MOBILE FIX
-   Target: phones ≤ 768px — smooth scroll, readable layout
+   MOBILE COMPONENT FIXES
+   Section heights/padding handled by dvh + clamp() above.
+   This block: button sizing, component heights, overflow.
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Fixed floating header buttons: shrink + reposition ── */
@@ -1664,12 +1689,12 @@ html {
     height: 13px !important;
   }
 
-  /* Hero — give breathing room below the fixed buttons */
+  /* Hero: clear the fixed buttons at top */
   .hero {
     padding-top: 72px !important;
   }
 
-  /* Prevent any element from causing horizontal scroll */
+  /* Prevent horizontal scroll on any container */
   .app-container,
   section,
   .glass,
@@ -1679,45 +1704,27 @@ html {
     overflow-x: hidden;
   }
 
-  /* Network menu — reduce height to fit small screens */
+  /* Network sphere — tighter height */
   .network-visual {
     padding: 12px !important;
   }
   .network-menu-container {
-    height: 300px !important;
+    height: 260px !important;
   }
 
-  /* Product vision grid — single column */
-  .product-vision-section {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
+  /* Vision grid — single column */
   .vision-grid {
     grid-template-columns: 1fr !important;
-    gap: 16px !important;
-    margin-top: 28px !important;
+    gap: 12px !important;
+    margin-top: 16px !important;
   }
 
-  /* Features section */
-  .features-section {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
+  /* Features grid gap */
   .grid-showcase {
-    gap: 16px !important;
+    gap: 12px !important;
   }
 
-  /* Architecture section */
-  .arch-section {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
-
-  /* Community section */
-  .community-section {
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-  }
+  /* Community tab content */
   .community-tab-content {
     width: 100% !important;
     max-width: 100% !important;
@@ -1726,63 +1733,60 @@ html {
 
   /* DAO simulator — single column */
   .dao-sim-container {
-    padding: 16px !important;
-    gap: 16px !important;
-    border-radius: 16px !important;
+    padding: 14px !important;
+    gap: 14px !important;
+    border-radius: 14px !important;
   }
 
   /* Terminal simulator */
   .terminal-sim-grid {
-    gap: 12px !important;
+    gap: 10px !important;
   }
   .terminal-box,
   .terminal-live-feed {
-    height: 240px !important;
+    height: 185px !important;
     border-radius: 12px !important;
   }
 
   /* Contributor constellation */
   .constellation-container {
-    height: 260px !important;
+    height: 200px !important;
   }
   .constellation-glow-container {
     border-radius: 16px !important;
   }
 
-  /* Footer */
-  .footer {
-    padding: 32px 16px !important;
-  }
+  /* Footer link wrapping */
   .footer-links {
     flex-wrap: wrap !important;
     gap: 12px !important;
     justify-content: center !important;
   }
 
-  /* Glow spotlights — reduce blur cost on mobile */
+  /* Glow spotlights — cheaper on mobile */
   .glow-spotlight {
     filter: blur(60px) !important;
-    opacity: 0.1 !important;
+    opacity: 0.08 !important;
   }
 }
 
 /* ── Extra small phones (≤ 390px) ── */
 @media (max-width: 390px) {
   .hero-title {
-    font-size: 26px !important;
+    font-size: 24px !important;
     line-height: 1.25 !important;
   }
   .hero-description {
     font-size: 13px !important;
   }
   .section-title {
-    font-size: 20px !important;
+    font-size: 19px !important;
   }
   .network-title {
-    font-size: 20px !important;
+    font-size: 19px !important;
   }
   .network-menu-container {
-    height: 240px !important;
+    height: 210px !important;
   }
   .splash-title {
     font-size: 26px !important;
