@@ -259,10 +259,10 @@ Please make sure `npm audit` reports **0 vulnerabilities** before submitting.
 ## Community
 
 <a href="https://discord.gg/WsUCXPxnZ">
-  <img src="./public/discord_Community_image.jpeg" alt="Join the Startora Discord" width="320" style="border-radius: 8px;" />
+  <img src="./public/discord_Community_image.jpeg" alt="Join the Startora Discord" width="320" style="border-radius: 8px;" align="center" />
 </a>
 
-💬 **[Join the Startora Discord Community →](https://discord.gg/WsUCXPxnZ)**
+💬 **[Join the Startora Discord Community →](https://discord.gg/VcTCYPhck)**
 
 ---
 
