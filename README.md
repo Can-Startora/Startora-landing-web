@@ -24,8 +24,9 @@
 </p>
 
 <p align="center">
-  <b>This repo is the landing page.</b> Looking for the core platform?<br/>
-  👉 <a href="https://github.com/Can-Startora/Startora"><strong>Can-Startora/Startora</strong></a>
+  <b>This repo is the landing page.</b> 
+  <!-- Looking for the core platform?<br/>
+  👉 <a href="https://github.com/Can-Startora/Startora"><strong>Can-Startora/Startora</strong></a> -->
 </p>
 
 ---
