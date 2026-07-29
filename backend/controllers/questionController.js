@@ -1,4 +1,6 @@
 import { getModels, loadJsonQuestions, saveJsonQuestions } from '../config/db.js';
+import { randomUUID } from 'crypto';
+import { sanitizeString } from './userController.js';
 
 export const getQuestions = async (req, res) => {
   const { Question, isMongoConnected } = getModels();
@@ -18,13 +20,16 @@ export const getQuestions = async (req, res) => {
 
 export const createQuestion = async (req, res) => {
   const { Question, isMongoConnected } = getModels();
-  const { text, askedBy } = req.body;
+  let { text, askedBy } = req.body;
   if (!text) {
     return res.status(400).json({ error: 'Question text is required' });
   }
 
+  text = sanitizeString(text.trim());
+  askedBy = askedBy ? sanitizeString(askedBy.trim()) : '@anonymous';
+
   const newQuestion = {
-    id: Date.now().toString(),
+    id: randomUUID(),
     text,
     askedBy: askedBy || '@anonymous',
     createdAt: new Date().toISOString(),
@@ -50,14 +55,17 @@ export const createQuestion = async (req, res) => {
 export const createAnswer = async (req, res) => {
   const { Question, isMongoConnected } = getModels();
   const { id } = req.params;
-  const { text, answeredBy } = req.body;
+  let { text, answeredBy } = req.body;
 
   if (!text) {
     return res.status(400).json({ error: 'Answer text is required' });
   }
 
+  text = sanitizeString(text.trim());
+  answeredBy = answeredBy ? sanitizeString(answeredBy.trim()) : '@anonymous';
+
   const newAnswer = {
-    id: Date.now().toString(),
+    id: randomUUID(),
     text,
     answeredBy: answeredBy || '@anonymous',
     createdAt: new Date().toISOString()

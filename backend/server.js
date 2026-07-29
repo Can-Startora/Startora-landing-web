@@ -14,22 +14,25 @@ import questionRoutes from './routes/questionRoutes.js';
 import ideaRoutes from './routes/ideaRoutes.js';
 import suggestionRoutes from './routes/suggestionRoutes.js';
 import githubRoutes from './routes/githubRoutes.js';
-
-dotenv.config();
+import userRoutes from './routes/userRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:5173', 'http://localhost:4173'];
+
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
-// Initialize DB (MongoDB connection with JSON fallback)
-await connectDB();
-
 // Mount API Routes
+app.use('/api/users', userRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/ideas', ideaRoutes);
 app.use('/api/suggestions', suggestionRoutes);
@@ -43,6 +46,20 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`Backend server running on http://localhost:${PORT}`);
+// Encapsulated server startup to safely handle DB connection & initialization
+const startServer = async () => {
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error('Database initialization encountered an unhandled error:', err);
+  }
+
+  app.listen(PORT, () => {
+    console.log(`Backend server running on http://localhost:${PORT}`);
+  });
+};
+
+startServer().catch((err) => {
+  console.error('Fatal error during server startup:', err);
+  process.exit(1);
 });

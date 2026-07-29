@@ -1,4 +1,6 @@
 import { getModels, loadJsonIdeas, saveJsonIdeas } from '../config/db.js';
+import { randomUUID } from 'crypto';
+import { sanitizeString } from './userController.js';
 
 export const getIdeas = async (req, res) => {
   const { Idea, isMongoConnected } = getModels();
@@ -25,13 +27,18 @@ export const getIdeas = async (req, res) => {
 
 export const createIdea = async (req, res) => {
   const { Idea, isMongoConnected } = getModels();
-  const { category, title, description, proposedBy } = req.body;
+  let { category, title, description, proposedBy } = req.body;
   if (!category || !title || !description) {
     return res.status(400).json({ error: 'Category, Title, and Description are required' });
   }
 
+  category = sanitizeString(category.trim());
+  title = sanitizeString(title.trim());
+  description = sanitizeString(description.trim());
+  proposedBy = proposedBy ? sanitizeString(proposedBy.trim()) : '@anonymous';
+
   const newIdea = {
-    id: Date.now().toString(),
+    id: randomUUID(),
     category,
     title,
     description,

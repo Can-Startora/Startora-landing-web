@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Mail, User, Lock, Sparkles, LogOut, Key, CheckCircle2, AlertCircle, Cpu, Award } from 'lucide-react';
 import { API_BASE_URL } from '../config';
 import '../styles/ContributorPortal.css';

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Vote, Plus, Award, CheckCircle, XCircle, Loader2, Calendar, User, FileText } from 'lucide-react';
+import { Vote, Plus, Award, CheckCircle, XCircle, Loader2, User } from 'lucide-react';
 import { API_BASE_URL } from '../config';
 
 const PRESET_VOTERS = [
@@ -88,13 +88,9 @@ export default function DaoProposalSim() {
 
       const voter = PRESET_VOTERS[voterIndex];
       setTimeout(() => {
-        let yesVal = 0;
-        let noVal = 0;
         if (voter.vote === 'YES') {
-          yesVal = voter.weight;
           setVotesYes((prev) => prev + voter.weight);
         } else {
-          noVal = voter.weight;
           setVotesNo((prev) => prev + voter.weight);
         }
 
@@ -135,6 +131,7 @@ export default function DaoProposalSim() {
       };
       saveVoteResult();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [votingState]);
 
   const totalVotes = votesYes + votesNo;

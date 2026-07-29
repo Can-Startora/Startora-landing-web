@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { HelpCircle, MessageSquare, Send, User, Calendar, PlusCircle, ArrowDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { HelpCircle, MessageSquare, Send, User, Calendar, PlusCircle } from 'lucide-react';
 import '../styles/CommunityQA.css';
 import { API_BASE_URL } from '../config';
 

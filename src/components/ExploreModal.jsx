@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Send, User, Folder, Calendar, Sparkles, Lightbulb } from 'lucide-react';
 import '../styles/ExploreModal.css';
 import { API_BASE_URL } from '../config';

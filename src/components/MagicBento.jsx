@@ -76,16 +76,7 @@ const calculateSpotlightValues = radius => ({
   fadeDistance: radius * 0.75
 });
 
-const updateCardGlowProperties = (card, mouseX, mouseY, glow, radius) => {
-  const rect = card.getBoundingClientRect();
-  const relativeX = ((mouseX - rect.left) / rect.width) * 100;
-  const relativeY = ((mouseY - rect.top) / rect.height) * 100;
 
-  card.style.setProperty('--glow-x', `${relativeX}%`);
-  card.style.setProperty('--glow-y', `${relativeY}%`);
-  card.style.setProperty('--glow-intensity', glow.toString());
-  card.style.setProperty('--glow-radius', `${radius}px`);
-};
 
 const ParticleCard = ({
   children,

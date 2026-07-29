@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import {
   Rocket,
   Brain,
@@ -6,14 +6,10 @@ import {
   Vote,
   Cpu,
   Sparkles,
-  CheckCircle2,
-  Database,
   Layers,
-  Network,
   ArrowRight,
   Play,
   Globe,
-  Send,
   Code2,
   Home,
   Users,
@@ -28,16 +24,17 @@ const GithubIcon = (props) => (
 );
 import './styles/App.css';
 import Dock from './components/Dock';
-import InfiniteMenu from './components/InfiniteMenu';
 import BorderGlow from './components/BorderGlow';
-import LetterGlitch from './components/LetterGlitch';
-import MagicBento from './components/MagicBento';
-import ContributorConstellation from './components/ContributorConstellation';
-import TerminalSimulator from './components/TerminalSimulator';
-import DaoProposalSim from './components/DaoProposalSim';
-import Galaxy from './components/Galaxy';
-import ExploreModal from './components/ExploreModal';
-import CommunityQA from './components/CommunityQA';
+
+const InfiniteMenu = lazy(() => import('./components/InfiniteMenu'));
+const LetterGlitch = lazy(() => import('./components/LetterGlitch'));
+const MagicBento = lazy(() => import('./components/MagicBento'));
+const ContributorConstellation = lazy(() => import('./components/ContributorConstellation'));
+const TerminalSimulator = lazy(() => import('./components/TerminalSimulator'));
+const DaoProposalSim = lazy(() => import('./components/DaoProposalSim'));
+const Galaxy = lazy(() => import('./components/Galaxy'));
+const ExploreModal = lazy(() => import('./components/ExploreModal'));
+const CommunityQA = lazy(() => import('./components/CommunityQA'));
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -69,33 +66,10 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const [scrollProgress, setScrollProgress] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      if (scrollHeight > 0) {
-        const percentage = Math.round((scrollTop / scrollHeight) * 100);
-        setScrollProgress(percentage);
-      } else {
-        setScrollProgress(0);
-      }
-    };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
-  const getScrollProgressString = () => {
-    const totalBars = 8;
-    const filled = Math.round((scrollProgress / 100) * totalBars);
-    const leftBars = '='.repeat(filled);
-    const rightBars = '='.repeat(totalBars - filled);
-    const pctStr = `${scrollProgress}%`.padStart(4, ' ');
-    return `[${leftBars} ${pctStr} ${rightBars}]`;
-  };
+
 
   const menuScale = windowWidth < 480 ? 0.8 : windowWidth < 768 ? 0.95 : windowWidth < 1024 ? 1.15 : 1.4;
 
@@ -336,6 +310,7 @@ export default function App() {
 
   return (
     <div className="app-container">
+      <Suspense fallback={null}>
       {/* Fixed GitHub CTA — top right */}
       <a
         href="https://github.com/Manvikamboz/Startora"
@@ -451,7 +426,7 @@ export default function App() {
             <p className="splash-tagline">Creating Startups before graduation</p>
             <div className="splash-divider" />
             <p className="splash-description">
-              The actual product will be out soon! In the meantime, feel free to enter and explore our interactive preview workspace showcasing the platform's features.
+              The actual product will be out soon! In the meantime, feel free to enter and explore our interactive preview workspace showcasing the platform&apos;s features.
             </p>
             <button
               className="splash-coming-soon cursor-target"
@@ -802,6 +777,7 @@ export default function App() {
           onClose={() => setExploredCategory(null)}
         />
       )}
+      </Suspense>
     </div>
   );
 }

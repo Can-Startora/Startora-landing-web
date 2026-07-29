@@ -1,4 +1,6 @@
 import { getModels, loadJsonSuggestions, saveJsonSuggestions } from '../config/db.js';
+import { randomUUID } from 'crypto';
+import { sanitizeString } from './userController.js';
 
 export const getSuggestions = async (req, res) => {
   const { Suggestion, isMongoConnected } = getModels();
@@ -15,13 +17,17 @@ export const getSuggestions = async (req, res) => {
 
 export const createSuggestion = async (req, res) => {
   const { Suggestion, isMongoConnected } = getModels();
-  const { title, description, proposedBy } = req.body;
+  let { title, description, proposedBy } = req.body;
   if (!title || !description) {
     return res.status(400).json({ error: 'Title and Description are required' });
   }
 
+  title = sanitizeString(title.trim());
+  description = sanitizeString(description.trim());
+  proposedBy = proposedBy ? sanitizeString(proposedBy.trim()) : '@anonymous';
+
   const newSuggestion = {
-    id: Date.now().toString(),
+    id: randomUUID(),
     title,
     description,
     proposedBy: proposedBy || '@anonymous',

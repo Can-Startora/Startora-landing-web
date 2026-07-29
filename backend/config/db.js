@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 export const DB_FILE = path.resolve(__dirname, '../data/suggestions.json');
 export const IDEAS_FILE = path.resolve(__dirname, '../data/ideas.json');
 export const QUESTIONS_FILE = path.resolve(__dirname, '../data/questions.json');
+export const USERS_FILE = path.resolve(__dirname, '../data/users.json');
 
 // JSON database operations helpers
 export const loadJsonSuggestions = () => {
@@ -37,7 +38,6 @@ export const saveJsonSuggestions = (suggestions) => {
 export const loadJsonIdeas = () => {
   try {
     if (!fs.existsSync(IDEAS_FILE)) {
-      r
       fs.writeFileSync(IDEAS_FILE, JSON.stringify([], null, 2));
       return [];
     }
@@ -79,16 +79,39 @@ export const saveJsonQuestions = (questions) => {
   }
 };
 
+export const loadJsonUsers = () => {
+  try {
+    if (!fs.existsSync(USERS_FILE)) {
+      fs.writeFileSync(USERS_FILE, JSON.stringify([], null, 2));
+      return [];
+    }
+    const data = fs.readFileSync(USERS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Error loading JSON users:', err);
+    return [];
+  }
+};
+
+export const saveJsonUsers = (users) => {
+  try {
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+  } catch (err) {
+    console.error('Error saving JSON users:', err);
+  }
+};
+
 // Database state exports that get populated during connectDB()
 export let isMongoConnected = false;
 export let Suggestion;
 export let Idea;
 export let Question;
+export let User;
 
 export const connectDB = async () => {
   const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/startora';
   try {
-    console.log(`Connecting to MongoDB at: ${mongoUri}...`);
+    console.log('Connecting to MongoDB...');
     await mongoose.connect(mongoUri, {
       serverSelectionTimeoutMS: 4000
     });
@@ -135,6 +158,18 @@ export const connectDB = async () => {
     });
     Question = mongoose.model('Question', questionSchema);
 
+    const userSchema = new mongoose.Schema({
+      id: { type: String, required: true, unique: true },
+      email: { type: String, required: true, unique: true },
+      githubHandle: { type: String, required: true },
+      password: { type: String, required: true },
+      skills: { type: [String], default: [] },
+      loginAttempts: { type: Number, default: 0 },
+      lockUntil: { type: Date, default: null },
+      createdAt: { type: Date, default: Date.now }
+    });
+    User = mongoose.model('User', userSchema);
+
   } catch (err) {
     console.warn('MongoDB connection failed. Falling back gracefully to JSON file storage.');
     console.warn(`Reason: ${err.message}`);
@@ -144,5 +179,5 @@ export const connectDB = async () => {
 
 // Helper getter function to access models safely
 export const getModels = () => {
-  return { Suggestion, Idea, Question, isMongoConnected };
+  return { Suggestion, Idea, Question, User, isMongoConnected };
 };
