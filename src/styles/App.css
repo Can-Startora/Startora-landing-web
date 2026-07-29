@@ -867,15 +867,18 @@
 }
 
 /* ═══════════════════════════════════════════════════
-   SCROLL SNAP — ONE SECTION PER SCREEN (ALL DEVICES)
-   Uses 100dvh: adapts when mobile browser bar appears
+   LAYOUT & SCROLL SYSTEM — FLUID & CLEAN
    ═══════════════════════════════════════════════════ */
 
 html {
-  scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   overflow-y: scroll;
-  overscroll-behavior-y: none; /* prevent pull-to-refresh fighting snap */
+}
+
+@media (min-width: 769px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
 }
 
 html.no-snap {
@@ -884,10 +887,9 @@ html.no-snap {
 
 body {
   overflow-y: visible;
-  overscroll-behavior-y: none;
 }
 
-/* Every section = exactly one screen tall, always */
+/* Sections fit screen smoothly without hard height locks or internal scrollbars */
 .hero,
 .product-vision-section,
 .features-section,
@@ -899,20 +901,17 @@ body {
 .whats-next-section,
 .founder-section {
   scroll-snap-align: start;
-  scroll-snap-stop: always;       /* never skip a section */
   scroll-margin-top: 0px;
 
-  /* dvh = Dynamic Viewport Height — shrinks when mobile browser bar shows */
-  min-height: 100dvh;
-  height: 100dvh;                 /* lock each section to one screen */
-  overflow-y: auto;               /* scroll within section if content overflows */
-  overflow-x: hidden;
+  min-height: 100vh;
+  height: auto;
+  overflow: visible;
 
-  /* Padding: min 60px, preferred 8vh, max 120px — scales with screen */
-  padding-top:    clamp(60px, 8dvh, 120px);
-  padding-bottom: clamp(60px, 8dvh, 120px);
-  padding-left:   clamp(16px, 4vw, 48px);
-  padding-right:  clamp(16px, 4vw, 48px);
+  /* Padding with extra bottom space to clear floating dock navigation */
+  padding-top: clamp(60px, 8vh, 100px);
+  padding-bottom: clamp(100px, 12vh, 140px);
+  padding-left: clamp(16px, 4vw, 48px);
+  padding-right: clamp(16px, 4vw, 48px);
 
   display: flex;
   flex-direction: column;
@@ -921,25 +920,27 @@ body {
   position: relative;
 }
 
-/* QA section participates in snap too */
+/* QA section */
 .qa-section {
   scroll-snap-align: start;
-  scroll-snap-stop: always;
-  height: 100dvh;
-  min-height: 100dvh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  min-height: 100vh;
+  height: auto;
+  overflow: visible;
+  padding-bottom: clamp(100px, 12vh, 140px);
   box-sizing: border-box;
 }
 
 .footer {
   scroll-snap-align: start;
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 48px);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 120px);
 }
 
-/* ── Mobile-specific snap tuning (keep snap ON, just tune heights) ── */
+/* ── Mobile Layout Tuning: Fluid scrolling with no section cutoffs ── */
 @media (max-width: 768px) {
-  /* On small screens, sections still fill the full dynamic viewport */
+  html {
+    scroll-snap-type: none !important;
+  }
+
   .hero,
   .product-vision-section,
   .features-section,
@@ -949,19 +950,20 @@ body {
   .faq-section,
   .community-section,
   .whats-next-section,
-  .founder-section {
-    height: 100dvh;
-    min-height: 100dvh;
-    /* Tighter padding on small screens */
-    padding-top:    clamp(56px, 10dvh, 80px);
-    padding-bottom: clamp(56px, 10dvh, 80px);
-    padding-left:   16px;
-    padding-right:  16px;
-    justify-content: flex-start;  /* top-align so header doesn't clip content */
+  .founder-section,
+  .qa-section {
+    scroll-snap-align: none !important;
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 60px !important;
+    padding-bottom: 110px !important; /* Clears floating dock */
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    justify-content: flex-start !important;
   }
 
   .footer {
-    padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 80px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 110px) !important;
   }
 }
 
