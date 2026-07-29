@@ -48,7 +48,7 @@
   padding: 30px;
   display: flex;
   flex-direction: column;
-  height: 520px;
+  height: 520px;       /* desktop fixed height */
   box-sizing: border-box;
 }
 
