@@ -361,7 +361,8 @@ class ArcballControl {
     canvas.addEventListener('pointerleave', this.onPointerLeave);
     canvas.addEventListener('pointermove', this.onPointerMove);
 
-    canvas.style.touchAction = 'none';
+    // 'pan-y' lets the browser handle vertical scroll while still capturing horizontal drag
+    canvas.style.touchAction = 'pan-y';
   }
 
   destroy() {

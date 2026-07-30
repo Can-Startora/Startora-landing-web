@@ -261,8 +261,10 @@ export default function Galaxy({
 
     const mesh = new Mesh(gl, { geometry, program });
     let animateId;
+    let isVisible = false;
 
     function update(t) {
+      if (!isVisible) return; // pause when off-screen — frees GPU during scroll
       animateId = requestAnimationFrame(update);
       if (!disableAnimation) {
         program.uniforms.uTime.value = t * 0.001;
@@ -281,6 +283,21 @@ export default function Galaxy({
 
       renderer.render({ scene: mesh });
     }
+
+    // Pause rendering when not visible — critical for scroll performance
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          animateId = requestAnimationFrame(update);
+        } else {
+          cancelAnimationFrame(animateId);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    visibilityObserver.observe(ctn);
+
     animateId = requestAnimationFrame(update);
     ctn.appendChild(gl.canvas);
 
@@ -303,12 +320,13 @@ export default function Galaxy({
 
     return () => {
       cancelAnimationFrame(animateId);
+      visibilityObserver.disconnect();
       window.removeEventListener('resize', resize);
       if (mouseInteraction) {
         ctn.removeEventListener('mousemove', handleMouseMove);
         ctn.removeEventListener('mouseleave', handleMouseLeave);
       }
-      ctn.removeChild(gl.canvas);
+      if (ctn.contains(gl.canvas)) ctn.removeChild(gl.canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, [

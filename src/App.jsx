@@ -25,6 +25,7 @@ const GithubIcon = (props) => (
 import './styles/App.css';
 import Dock from './components/Dock';
 import BorderGlow from './components/BorderGlow';
+import { TypewriterHeading, TypewriterParagraph } from './components/TypewriterText';
 
 const InfiniteMenu = lazy(() => import('./components/InfiniteMenu'));
 const LetterGlitch = lazy(() => import('./components/LetterGlitch'));
@@ -460,13 +461,16 @@ export default function App() {
 
 
       <section id="hero" className="hero">
-        <h1 className="hero-title">
-          Student Innovation Meets <br />
-          <span className="text-gradient">Cryptographic Proof</span>
-        </h1>
-        <p className="hero-description">
-          A premium virtual launchpad linking AI Feasibility Analysis, MetaMask Blockchain IP Registries, and DAO Governance to seed tomorrow&apos;s student startups.
-        </p>
+        <TypewriterHeading
+          line1="Student Innovation Meets"
+          line2="Cryptographic Proof"
+          speed={45}
+        />
+        <TypewriterParagraph
+          text="A premium virtual launchpad linking AI Feasibility Analysis, MetaMask Blockchain IP Registries, and DAO Governance to seed tomorrow's student startups."
+          speed={18}
+          delay={1600}
+        />
         <div className="hero-cta">
           <button
             onClick={() => document.getElementById('architecture')?.scrollIntoView({ behavior: 'smooth' })}
@@ -681,7 +685,7 @@ export default function App() {
 
       <section id="architecture" className="arch-section">
         <div className="section-header">
-          <h2 className="section-title">System Architecture</h2>
+          <h2 className="section-title text-gradient">System Architecture</h2>
           <p className="section-description">How frontend inputs integrate with our distributed servers, AI networks, and smart contracts.</p>
         </div>
 
@@ -731,7 +735,7 @@ export default function App() {
         </div>
 
         {/* Tab Content Display */}
-        <div className="community-tab-content animate-scaleUp" style={{ width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
+        <div className="community-tab-content animate-scaleUp" style={{ width: '100%', maxWidth: '1380px', margin: '0 auto' }}>
           {communityTab === 'constellation' && <ContributorConstellation />}
           {communityTab === 'terminal' && <TerminalSimulator />}
           {communityTab === 'dao' && <DaoProposalSim />}

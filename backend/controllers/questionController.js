@@ -28,6 +28,10 @@ export const createQuestion = async (req, res) => {
   text = sanitizeString(text.trim());
   askedBy = askedBy ? sanitizeString(askedBy.trim()) : '@anonymous';
 
+  if (text === null || askedBy === null) {
+    return res.status(400).json({ error: 'Input contains disallowed content.' });
+  }
+
   const newQuestion = {
     id: randomUUID(),
     text,
@@ -63,6 +67,10 @@ export const createAnswer = async (req, res) => {
 
   text = sanitizeString(text.trim());
   answeredBy = answeredBy ? sanitizeString(answeredBy.trim()) : '@anonymous';
+
+  if (text === null || answeredBy === null) {
+    return res.status(400).json({ error: 'Input contains disallowed content.' });
+  }
 
   const newAnswer = {
     id: randomUUID(),

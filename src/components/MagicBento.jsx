@@ -319,9 +319,9 @@ const ParticleCard = ({
       );
     };
 
-    element.addEventListener('mouseenter', handleMouseEnter);
-    element.addEventListener('mouseleave', handleMouseLeave);
-    element.addEventListener('mousemove', handleMouseMove);
+    element.addEventListener('mouseenter', handleMouseEnter, { passive: true });
+    element.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+    element.addEventListener('mousemove', handleMouseMove, { passive: true });
     element.addEventListener('click', handleClick);
 
     return () => {
@@ -400,62 +400,74 @@ const GlobalSpotlight = ({
       });
     };
 
+    let rafId = null;
     const handleMouseMove = e => {
       if (!spotlightRef.current) return;
 
-      if (!isInsideSection.current) {
-        handleMouseEnter();
-      }
+      if (rafId) cancelAnimationFrame(rafId);
+      const pageX = e.pageX;
+      const pageY = e.pageY;
+      const clientX = e.clientX;
+      const clientY = e.clientY;
 
-      const { proximity, fadeDistance } = calculateSpotlightValues(spotlightRadius);
-      let minDistance = Infinity;
-
-      cachedCards.current.forEach(card => {
-        const centerX = card.left + card.width / 2;
-        const centerY = card.top + card.height / 2;
-        const distance =
-          Math.hypot(e.pageX - centerX, e.pageY - centerY) - Math.max(card.width, card.height) / 2;
-        const effectiveDistance = Math.max(0, distance);
-
-        minDistance = Math.min(minDistance, effectiveDistance);
-
-        let glowIntensity = 0;
-        if (effectiveDistance <= proximity) {
-          glowIntensity = 1;
-        } else if (effectiveDistance <= fadeDistance) {
-          glowIntensity = (fadeDistance - effectiveDistance) / (fadeDistance - proximity);
+      rafId = requestAnimationFrame(() => {
+        if (!isInsideSection.current) {
+          handleMouseEnter();
         }
 
-        const relativeX = ((e.pageX - card.left) / card.width) * 100;
-        const relativeY = ((e.pageY - card.top) / card.height) * 100;
-        card.element.style.setProperty('--glow-x', `${relativeX}%`);
-        card.element.style.setProperty('--glow-y', `${relativeY}%`);
-        card.element.style.setProperty('--glow-intensity', glowIntensity.toString());
-        card.element.style.setProperty('--glow-radius', `${spotlightRadius}px`);
-      });
+        const { proximity, fadeDistance } = calculateSpotlightValues(spotlightRadius);
+        let minDistance = Infinity;
 
-      gsap.to(spotlightRef.current, {
-        left: e.clientX,
-        top: e.clientY,
-        duration: 0.1,
-        ease: 'power2.out'
-      });
+        cachedCards.current.forEach(card => {
+          const centerX = card.left + card.width / 2;
+          const centerY = card.top + card.height / 2;
+          const distance =
+            Math.hypot(pageX - centerX, pageY - centerY) - Math.max(card.width, card.height) / 2;
+          const effectiveDistance = Math.max(0, distance);
 
-      const targetOpacity =
-        minDistance <= proximity
-          ? 0.8
-          : minDistance <= fadeDistance
-            ? ((fadeDistance - minDistance) / (fadeDistance - proximity)) * 0.8
-            : 0;
+          minDistance = Math.min(minDistance, effectiveDistance);
 
-      gsap.to(spotlightRef.current, {
-        opacity: targetOpacity,
-        duration: targetOpacity > 0 ? 0.2 : 0.5,
-        ease: 'power2.out'
+          let glowIntensity = 0;
+          if (effectiveDistance <= proximity) {
+            glowIntensity = 1;
+          } else if (effectiveDistance <= fadeDistance) {
+            glowIntensity = (fadeDistance - effectiveDistance) / (fadeDistance - proximity);
+          }
+
+          const relativeX = ((pageX - card.left) / card.width) * 100;
+          const relativeY = ((pageY - card.top) / card.height) * 100;
+          card.element.style.setProperty('--glow-x', `${relativeX}%`);
+          card.element.style.setProperty('--glow-y', `${relativeY}%`);
+          card.element.style.setProperty('--glow-intensity', glowIntensity.toString());
+          card.element.style.setProperty('--glow-radius', `${spotlightRadius}px`);
+        });
+
+        if (spotlightRef.current) {
+          gsap.to(spotlightRef.current, {
+            left: clientX,
+            top: clientY,
+            duration: 0.1,
+            ease: 'power2.out'
+          });
+
+          const targetOpacity =
+            minDistance <= proximity
+              ? 0.8
+              : minDistance <= fadeDistance
+                ? ((fadeDistance - minDistance) / (fadeDistance - proximity)) * 0.8
+                : 0;
+
+          gsap.to(spotlightRef.current, {
+            opacity: targetOpacity,
+            duration: targetOpacity > 0 ? 0.2 : 0.5,
+            ease: 'power2.out'
+          });
+        }
       });
     };
 
     const handleMouseLeave = () => {
+      if (rafId) cancelAnimationFrame(rafId);
       isInsideSection.current = false;
       cachedCards.current.forEach(card => {
         card.element.style.setProperty('--glow-intensity', '0');
@@ -470,11 +482,12 @@ const GlobalSpotlight = ({
       }
     };
 
-    container.addEventListener('mouseenter', handleMouseEnter);
-    container.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('mouseleave', handleMouseLeave);
+    container.addEventListener('mouseenter', handleMouseEnter, { passive: true });
+    container.addEventListener('mousemove', handleMouseMove, { passive: true });
+    container.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       container.removeEventListener('mouseenter', handleMouseEnter);
       container.removeEventListener('mousemove', handleMouseMove);
       container.removeEventListener('mouseleave', handleMouseLeave);

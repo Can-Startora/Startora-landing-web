@@ -31,11 +31,10 @@
   padding: 1.5rem;
   border-radius: 20px;
   border: 1px solid var(--border-color);
-  background: rgba(18, 15, 23, 0.6) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(18, 15, 23, 0.92) !important;
   font-weight: 300;
   overflow: hidden;
+  touch-action: pan-y;
   transition: all 0.3s ease;
 
   --glow-x: 50%;

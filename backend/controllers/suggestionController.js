@@ -26,6 +26,10 @@ export const createSuggestion = async (req, res) => {
   description = sanitizeString(description.trim());
   proposedBy = proposedBy ? sanitizeString(proposedBy.trim()) : '@anonymous';
 
+  if (title === null || description === null || proposedBy === null) {
+    return res.status(400).json({ error: 'Input contains disallowed content.' });
+  }
+
   const newSuggestion = {
     id: randomUUID(),
     title,

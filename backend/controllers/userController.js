@@ -5,9 +5,40 @@ import { randomUUID } from 'crypto';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** Basic HTML-entity sanitiser to prevent stored XSS. */
+/** XSS patterns that indicate a malicious payload — block these outright. */
+const XSS_BLOCK_PATTERNS = [
+  /<script[\s>]/i,
+  /<\/script>/i,
+  /javascript\s*:/i,
+  /on\w+\s*=/i,         // onerror=, onclick=, onload= etc.
+  /<img[^>]+onerror/i,
+  /<iframe/i,
+  /<svg[^>]+on\w+/i,
+  /expression\s*\(/i,   // CSS expression()
+  /vbscript\s*:/i,
+  /<object/i,
+  /<embed/i,
+];
+
+/**
+ * Sanitises a string for safe storage.
+ * Returns null if the input contains a known XSS payload pattern (caller should 400).
+ * Otherwise returns the HTML-entity-encoded string.
+ */
 export const sanitizeString = (str) => {
   if (typeof str !== 'string') return '';
+
+  // Decode common HTML entities first to catch double-encoded payloads
+  const decoded = str
+    .replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+    .replace(/&amp;/gi, '&').replace(/&quot;/gi, '"')
+    .replace(/&#x27;/gi, "'").replace(/&#x2F;/gi, '/');
+
+  if (XSS_BLOCK_PATTERNS.some(p => p.test(decoded) || p.test(str))) {
+    return null; // Signal to caller: reject this input
+  }
+
+  // HTML-encode the original (non-decoded) string for safe storage
   return str
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')

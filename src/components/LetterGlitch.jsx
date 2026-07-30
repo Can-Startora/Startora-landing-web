@@ -162,15 +162,18 @@ const LetterGlitch = ({
   };
 
   const animate = () => {
-    const now = Date.now();
-    if (now - lastGlitchTime.current >= glitchSpeed) {
-      updateLetters();
-      drawLetters();
-      lastGlitchTime.current = now;
-    }
+    // Skip expensive canvas draw when tab is backgrounded
+    if (document.visibilityState !== 'hidden') {
+      const now = Date.now();
+      if (now - lastGlitchTime.current >= glitchSpeed) {
+        updateLetters();
+        drawLetters();
+        lastGlitchTime.current = now;
+      }
 
-    if (smooth) {
-      handleSmoothTransitions();
+      if (smooth) {
+        handleSmoothTransitions();
+      }
     }
 
     animationRef.current = requestAnimationFrame(animate);

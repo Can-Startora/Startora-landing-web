@@ -22,7 +22,7 @@
   color: var(--text-primary);
   font-family: var(--font-body);
   line-height: 1.6;
-  overflow-x: hidden;
+  overscroll-behavior-x: none;
   scroll-behavior: smooth;
   scroll-padding-top: 0px;
 }
@@ -32,8 +32,10 @@ html, body {
   padding: 0;
   min-height: 100vh;
   box-sizing: border-box;
-  overflow-x: hidden;
+  width: 100%;
   max-width: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
 }
 
 *, *::before, *::after {
@@ -121,6 +123,8 @@ p {
   z-index: 0;
   pointer-events: none;
   opacity: 0.15;
+  will-change: transform; /* promote to own compositor layer — prevents scroll repaint interaction */
+  contain: strict;
 }
 
 /* Animations */

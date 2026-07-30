@@ -10,20 +10,18 @@
   position: relative;
   border-radius: var(--border-radius);
   isolation: isolate;
-  transform: translate3d(0, 0, 0.01px);
+  transform: translate3d(0, 0, 0);
   display: grid;
   border: 1px solid rgb(255 255 255 / 15%);
   background: var(--card-bg, #120F17);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  /* Removed backdrop-filter — having it on 7+ stacked cards creates separate GPU layers
+     and causes severe scroll jank. The parent section provides the glass background. */
   overflow: visible;
   box-shadow:
-    rgba(0, 0, 0, 0.1) 0px 1px 2px,
-    rgba(0, 0, 0, 0.1) 0px 2px 4px,
-    rgba(0, 0, 0, 0.1) 0px 4px 8px,
-    rgba(0, 0, 0, 0.1) 0px 8px 16px,
-    rgba(0, 0, 0, 0.1) 0px 16px 32px,
-    rgba(0, 0, 0, 0.1) 0px 32px 64px;
+    0 4px 24px rgba(0, 0, 0, 0.35),
+    0 1px 4px rgba(0, 0, 0, 0.2);
+  /* will-change on transform lets hover lift animate on compositor without layout recalc */
+  will-change: transform;
 }
 
 .border-glow-card::before,

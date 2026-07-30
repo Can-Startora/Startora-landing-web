@@ -172,8 +172,8 @@ export default function ContributorConstellation() {
       setHoveredNode(null);
     };
 
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseleave', handleMouseLeave);
+    canvas.addEventListener('mousemove', handleMouseMove, { passive: true });
+    canvas.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
     let isIntersecting = false;
     const observer = new IntersectionObserver(

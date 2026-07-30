@@ -15,6 +15,16 @@ import ideaRoutes from './routes/ideaRoutes.js';
 import suggestionRoutes from './routes/suggestionRoutes.js';
 import githubRoutes from './routes/githubRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import rateLimit from 'express-rate-limit';
+
+// Rate limiter for all write (POST) endpoints — 10 submissions per 15 min per IP
+const writeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many submissions from this IP. Please wait 15 minutes before trying again.' }
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,9 +43,9 @@ app.use(express.json());
 
 // Mount API Routes
 app.use('/api/users', userRoutes);
-app.use('/api/questions', questionRoutes);
-app.use('/api/ideas', ideaRoutes);
-app.use('/api/suggestions', suggestionRoutes);
+app.use('/api/questions', writeLimiter, questionRoutes);
+app.use('/api/ideas', writeLimiter, ideaRoutes);
+app.use('/api/suggestions', writeLimiter, suggestionRoutes);
 app.use('/api', githubRoutes);
 
 // Serve static assets from client build in production

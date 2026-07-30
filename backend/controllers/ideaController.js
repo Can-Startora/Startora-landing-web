@@ -37,6 +37,10 @@ export const createIdea = async (req, res) => {
   description = sanitizeString(description.trim());
   proposedBy = proposedBy ? sanitizeString(proposedBy.trim()) : '@anonymous';
 
+  if (category === null || title === null || description === null || proposedBy === null) {
+    return res.status(400).json({ error: 'Input contains disallowed content.' });
+  }
+
   const newIdea = {
     id: randomUUID(),
     category,

@@ -39,10 +39,12 @@ export default function TerminalSimulator() {
     ]
   });
 
-  const terminalEndRef = useRef(null);
+  const terminalBodyRef = useRef(null);
 
   useEffect(() => {
-    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (terminalBodyRef.current) {
+      terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
+    }
   }, [history]);
 
   useEffect(() => {
@@ -157,7 +159,7 @@ export default function TerminalSimulator() {
           <Terminal className="w-3.5 h-3.5 text-cyan-400" />
         </div>
 
-        <div className="terminal-body" style={{ flex: 1, padding: '20px', overflowY: 'auto', textAlign: 'left', fontFamily: 'monospace', fontSize: '12px', lineHeight: '1.6' }}>
+        <div className="terminal-body" ref={terminalBodyRef} style={{ flex: 1, padding: '20px', overflowY: 'auto', textAlign: 'left', fontFamily: 'monospace', fontSize: '12px', lineHeight: '1.6' }}>
           {history.map((line, idx) => {
             if (line.type === 'spacer') return <div key={idx} style={{ height: '8px' }} />;
             let color = 'rgba(255, 255, 255, 0.85)';
@@ -170,7 +172,6 @@ export default function TerminalSimulator() {
               </div>
             );
           })}
-          <div ref={terminalEndRef} />
         </div>
 
         <form onSubmit={handleCommandSubmit} style={{ display: 'flex', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.2)', padding: '10px 16px' }}>
